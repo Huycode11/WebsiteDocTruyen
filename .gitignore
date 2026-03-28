@@ -1,0 +1,32 @@
+# Environment variables
+.env
+
+# Spring Boot configuration (containing secrets)
+server/src/main/resources/application.properties
+
+# Logs
+*.log
+server/*.log
+client/*.log
+
+# Project dependencies
+node_modules/
+target/
+
+# Build outputs
+dist/
+build/
+bin/
+out/
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+*.DS_Store
+
+# User-specific files
+.gemini/
+.agents/
+/tmp/
