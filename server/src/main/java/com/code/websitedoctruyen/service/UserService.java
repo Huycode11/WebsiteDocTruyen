@@ -1,4 +1,5 @@
 package com.code.websitedoctruyen.service;
+import java.util.Optional;
 
 import com.code.websitedoctruyen.model.User;
 import com.code.websitedoctruyen.repository.UserRepository;
@@ -33,4 +34,20 @@ public class UserService {
         
         return userRepository.save(user);
     }
+
+    public User loginUser(String identifier, String password) {
+        Optional<User> userOpt = userRepository.findByUsername(identifier);
+        if (userOpt.isEmpty()) {
+            userOpt = userRepository.findByEmail(identifier);
+        }
+
+        if (userOpt.isPresent()) {
+            User user = userOpt.get();
+            if (passwordEncoder.matches(password, user.getPasswordHash())) {
+                return user;
+            }
+        }
+        throw new RuntimeException("Invalid username/email or password");
+    }
 }
+
