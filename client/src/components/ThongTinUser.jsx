@@ -50,12 +50,12 @@ function FooterLink({ children }) {
   return <span style={{ fontSize: 30, lineHeight: 1.35 }}>{children}</span>;
 }
 
-export default function ThongTinUser({ onBack }) {
+export default function ThongTinUser({ user, onBack }) {
   const [formData, setFormData] = useState({
-    email: "User123@gmail.com",
-    username: "admin",
-    fullName: "abc",
-    gender: "male",
+    email: user?.email || "Chưa cập nhật",
+    username: user?.username || "Guest",
+    fullName: user?.fullName || "Người dùng mới",
+    gender: user?.gender || "male",
     password: "",
   });
 
