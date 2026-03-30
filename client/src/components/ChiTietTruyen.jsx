@@ -17,7 +17,7 @@ const sampleChapters = [
   { id: 1, title: "Chapter", code: "CH001", type: "5 Ảnh" },
 ];
 
-export default function ChiTietTruyen({ onHomeClick }) {
+export default function ChiTietTruyen({ onHomeClick, onFavoritesClick, onUserClick, onRatingClick }) {
   const [chapters] = useState(sampleChapters);
 
   const BG_PAGE = "#20212C";
@@ -49,7 +49,7 @@ export default function ChiTietTruyen({ onHomeClick }) {
             <span style={{ fontSize: 20, color: TEXT_WHITE }}>Series</span>
           </div>
           <span style={{ fontSize: 20, color: TEXT_WHITE, cursor: "pointer" }}>Categories</span>
-          <span style={{ fontSize: 20, color: TEXT_WHITE, cursor: "pointer" }}>Favorites</span>
+          <span style={{ fontSize: 20, color: TEXT_WHITE, cursor: "pointer" }} onClick={onFavoritesClick}>Favorites</span>
           <span style={{ fontSize: 20, color: TEXT_WHITE, cursor: "pointer" }}>History</span>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
@@ -59,7 +59,7 @@ export default function ChiTietTruyen({ onHomeClick }) {
           </div>
           <img src={imgThemeToggle} alt="Sáng/Tối" style={{ width: 48, height: 48, cursor: "pointer" }} />
           <img src={imgNotification} alt="Thông báo" style={{ width: 48, height: 48, cursor: "pointer" }} />
-          <div style={{ display: "flex", alignItems: "center", gap: 8, cursor: "pointer" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, cursor: "pointer" }} onClick={onUserClick}>
             <img src={imgUser} alt="Người dùng" style={{ width: 48, height: 48 }} />
             <span style={{ fontSize: 18 }}>User123@gmail.com</span>
           </div>
@@ -68,10 +68,8 @@ export default function ChiTietTruyen({ onHomeClick }) {
 
       {/* ── MAIN CONTENT ── */}
       <main style={{ flex: 1, padding: "40px 50px 60px 50px" }}>
-
-        {/* Section: Chapter List (full width) */}
+        {/* ... (rest of content) */}
         <div style={{ marginBottom: 40 }}>
-          {/* Section header */}
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
             <h2 style={{ fontSize: 26, fontWeight: 700, margin: 0, fontFamily: "Inter, sans-serif" }}>
               Danh sách chương đã upload
@@ -81,9 +79,7 @@ export default function ChiTietTruyen({ onHomeClick }) {
             </span>
           </div>
 
-          {/* Table */}
           <div style={{ borderRadius: "10px 10px 0 0", overflow: "hidden" }}>
-            {/* Table header */}
             <div style={{
               display: "grid",
               gridTemplateColumns: "80px 1fr 220px 220px",
@@ -100,7 +96,6 @@ export default function ChiTietTruyen({ onHomeClick }) {
               <span>Kiểu nội dung</span>
             </div>
 
-            {/* Table rows */}
             {chapters.map((ch, index) => (
               <div
                 key={ch.id}
@@ -126,12 +121,10 @@ export default function ChiTietTruyen({ onHomeClick }) {
               </div>
             ))}
           </div>
-
-
         </div>
 
-        {/* Section: Cover Image (below the table, large) */}
-        <div style={{ display: "flex", justifyContent: "center", marginTop: 20 }}>
+        {/* Section: Cover Image and Rating Button */}
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 30, marginTop: 20 }}>
           <img
             src={imgCoverLocal}
             alt="Story Cover"
@@ -143,8 +136,32 @@ export default function ChiTietTruyen({ onHomeClick }) {
               boxShadow: "0 8px 40px rgba(0,0,0,0.5)",
             }}
           />
+          <button
+            onClick={onRatingClick}
+            style={{
+              padding: "16px 40px",
+              backgroundColor: ACCENT_PURPLE,
+              color: "#131928",
+              border: "none",
+              borderRadius: 12,
+              fontSize: 24,
+              fontWeight: "bold",
+              cursor: "pointer",
+              transition: "transform 0.2s, background-color 0.2s",
+              boxShadow: "0 4px 15px rgba(179, 161, 255, 0.4)"
+            }}
+            onMouseEnter={e => {
+              e.currentTarget.style.backgroundColor = "#c4b5ff";
+              e.currentTarget.style.transform = "scale(1.05)";
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.backgroundColor = ACCENT_PURPLE;
+              e.currentTarget.style.transform = "scale(1)";
+            }}
+          >
+            Đánh giá truyện
+          </button>
         </div>
-
       </main>
 
       {/* ── FOOTER ── */}

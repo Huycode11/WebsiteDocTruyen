@@ -26,7 +26,7 @@ const stories = [
   { id: 6, title: "Huyền giới chi môn", img: imgImage7, hd: true },
 ];
 
-export default function PhamDucHuyTrangChu({ user, onUserClick, onSearchClick, onLoginClick, onLogout }) {
+export default function PhamDucHuyTrangChu({ user, onUserClick, onSearchClick, onLoginClick, onLogout, onUploadClick, onStoryClick }) {
   const handleUserIconClick = () => {
     if (user) {
       onUserClick();
@@ -38,7 +38,7 @@ export default function PhamDucHuyTrangChu({ user, onUserClick, onSearchClick, o
 
   return (
     <div style={{ backgroundColor: "#0f172a", minHeight: "100vh", color: "white", fontFamily: "Inter, sans-serif" }}>
-      {/* Navbar */}
+      {/* Navbar ... (rest of navbar) */}
       <nav style={{
         display: "flex",
         alignItems: "center",
@@ -60,7 +60,7 @@ export default function PhamDucHuyTrangChu({ user, onUserClick, onSearchClick, o
               <span>Series</span>
             </div>
             <span style={{ cursor: "pointer" }}>Categories</span>
-            <span style={{ cursor: "pointer" }}>Favorites</span>
+            <span style={{ cursor: "pointer" }} onClick={onUploadClick}>Favorites</span>
             <span style={{ cursor: "pointer" }}>History</span>
           </div>
         </div>
@@ -119,14 +119,16 @@ export default function PhamDucHuyTrangChu({ user, onUserClick, onSearchClick, o
           gap: "2rem"
         }}>
           {stories.map(story => (
-            <div key={story.id} style={{
-              borderRadius: "12px",
-              overflow: "hidden",
-              transition: "transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-              cursor: "pointer",
-              position: "relative",
-              backgroundColor: "rgba(217, 217, 217, 0.05)"
-            }}
+            <div key={story.id} 
+              onClick={() => onStoryClick(story)}
+              style={{
+                borderRadius: "12px",
+                overflow: "hidden",
+                transition: "transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                cursor: "pointer",
+                position: "relative",
+                backgroundColor: "rgba(217, 217, 217, 0.05)"
+              }}
               onMouseEnter={e => e.currentTarget.style.transform = "translateY(-10px)"}
               onMouseLeave={e => e.currentTarget.style.transform = "translateY(0)"}
             >

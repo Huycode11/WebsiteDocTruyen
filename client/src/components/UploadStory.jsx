@@ -11,7 +11,7 @@ const imgThemeToggle = "https://figma-alpha-api.s3.us-west-2.amazonaws.com/image
 const imgNotification = "https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/a6192694-ab37-479a-b1ca-bb67f1ee139f";
 const imgUser = "https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/e3e5fe7f-7f63-442b-9600-752edc47fac9";
 
-export default function UploadStory({ onHomeClick }) {
+export default function UploadStory({ onHomeClick, onFavoritesClick, onUserClick }) {
   const [formData, setFormData] = useState({
     title: "",
     author: "",
@@ -93,7 +93,7 @@ export default function UploadStory({ onHomeClick }) {
             <span style={{ fontSize: 22, color: TEXT_WHITE }}>Series</span>
           </div>
           <span style={{ fontSize: 22, color: TEXT_WHITE, cursor: "pointer" }}>Categories</span>
-          <span style={{ fontSize: 22, color: TEXT_WHITE, cursor: "pointer" }}>Favorites</span>
+          <span style={{ fontSize: 22, color: TEXT_WHITE, cursor: "pointer" }} onClick={onFavoritesClick}>Favorites</span>
           <span style={{ fontSize: 22, color: TEXT_WHITE, cursor: "pointer" }}>History</span>
         </div>
 
@@ -117,7 +117,7 @@ export default function UploadStory({ onHomeClick }) {
           </div>
           <img src={imgThemeToggle} alt="Sáng/Tối" style={{ width: 48, height: 48, cursor: "pointer" }} />
           <img src={imgNotification} alt="Thông báo" style={{ width: 48, height: 48, cursor: "pointer" }} />
-          <div style={{ display: "flex", alignItems: "center", gap: 8, cursor: "pointer" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, cursor: "pointer" }} onClick={onUserClick}>
             <img src={imgUser} alt="Người dùng" style={{ width: 48, height: 48 }} />
             <span style={{ fontSize: 20 }}>User123@gmail.com</span>
           </div>

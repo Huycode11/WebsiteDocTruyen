@@ -11,7 +11,7 @@ const imgNguoiDung = "https://www.figma.com/api/mcp/asset/a33a2536-3008-4ac1-87a
 const imgCover = "https://www.figma.com/api/mcp/asset/166ab19c-ff41-465e-a693-ba9fe242d88b";
 const imgPlay = "https://www.figma.com/api/mcp/asset/d0bd3171-f31b-44a2-bf48-8fe2218d1537";
 
-export default function TimKiem({ onBackHome, onUserClick }) {
+export default function TimKiem({ onBackHome, onUserClick, onFavoritesClick }) {
   return (
     <div style={{ backgroundColor: "#131928", minHeight: "100vh", overflowX: "auto" }}>
       <div style={{ position: "relative", width: "2805px", minHeight: "2644px", margin: "0 auto", backgroundColor: "#131928" }}>
@@ -24,7 +24,7 @@ export default function TimKiem({ onBackHome, onUserClick }) {
           </div>
           <p style={{ position: "absolute", fontFamily: "Inter, sans-serif", fontSize: "30px", color: "white", left: "467px", top: "45px", whiteSpace: "nowrap" }}>Series</p>
           <p style={{ position: "absolute", fontFamily: "Inter, sans-serif", fontSize: "30px", color: "white", left: "579px", top: "45px", whiteSpace: "nowrap" }}>Categories</p>
-          <p style={{ position: "absolute", fontFamily: "Inter, sans-serif", fontSize: "30px", color: "white", left: "765px", top: "45px", whiteSpace: "nowrap" }}>Favorites</p>
+          <p style={{ position: "absolute", fontFamily: "Inter, sans-serif", fontSize: "30px", color: "white", left: "765px", top: "45px", whiteSpace: "nowrap", cursor: "pointer" }} onClick={onFavoritesClick}>Favorites</p>
           <p style={{ position: "absolute", fontFamily: "Inter, sans-serif", fontSize: "30px", color: "white", left: "927px", top: "45px", whiteSpace: "nowrap" }}>History</p>
           <div style={{ position: "absolute", backgroundColor: "#b3a1ff", height: "71px", width: "1015px", left: "1059px", top: "20px", borderRadius: "12px" }}>
             <div style={{ position: "absolute", height: "64px", width: "64px", left: "17px", top: "4px" }}>

@@ -1,383 +1,220 @@
 import React, { useEffect, useMemo, useState } from "react";
-
+const imgCover = "https://www.figma.com/api/mcp/asset/be4a6751-ce0e-487b-8a43-b93a863b6b27"; // Chàng trai năm ấy
 const imgLogo = "https://www.figma.com/api/mcp/asset/9be4cec6-9b5d-427f-8a01-29247089f437";
 const imgFacebook = "https://www.figma.com/api/mcp/asset/9fd9aaea-1284-4c09-ba10-a807afac6270";
 const imgTelegram = "https://www.figma.com/api/mcp/asset/919f5117-4fc0-484d-9e71-b8d991371972";
 const imgTikTok = "https://www.figma.com/api/mcp/asset/18138309-e035-4154-ad53-e3e719aa19ca";
 const imgDiscord = "https://www.figma.com/api/mcp/asset/cfc86f8e-c8fe-4528-a9cd-d994e7e6dd3a";
-import figmaBg from "../figma_77_242.png";
 
-const bgW = 2773;
-const bgH = 1578;
-const footerStart = 1251; // y bắt đầu của footer trong node 77:242
-const footerH = bgH - footerStart;
-function getUserEmail() {
-  // Đăng nhập hiện tại chỉ lưu token, nên email lấy từ trường email khi submit.
-  return localStorage.getItem("userEmail") || "User123@gmail.com";
-}
+const imgOpenBook = "https://www.figma.com/api/mcp/asset/5437a700-29ed-44a9-9d06-4fa236756d90";
+const imgSearch = "https://www.figma.com/api/mcp/asset/8376f474-7699-43d0-af0d-35f111fa8d31";
+const imgUser = "https://www.figma.com/api/mcp/asset/a33a2536-3008-4ac1-87af-011fd3bb59d1";
 
-function StarRow({ value, onChange, size = 26 }) {
-  const filled = Math.max(0, Math.min(5, value || 0));
-  const buttons = [];
+function StarRating({ value, onChange, size = 32 }) {
+  const stars = [];
   for (let i = 1; i <= 5; i++) {
-    const isFilled = i <= filled;
-    buttons.push(
-      <button
+    stars.push(
+      <span
         key={i}
-        type="button"
-        onClick={() => onChange?.(i)}
-        aria-label={`Đánh giá ${i} sao`}
         style={{
-          width: size,
-          height: size,
-          padding: 0,
-          border: "none",
-          background: "transparent",
           cursor: onChange ? "pointer" : "default",
-          color: isFilled ? "#b3a1ff" : "rgba(179,161,255,0.35)",
+          color: i <= value ? "#FFD700" : "#cbd5e1",
           fontSize: size,
-          lineHeight: `${size}px`,
-          textAlign: "center",
+          marginRight: 4,
         }}
-        disabled={!onChange}
+        onClick={() => onChange && onChange(i)}
       >
         ★
-      </button>
+      </span>
     );
   }
-  return <div style={{ display: "flex", gap: 6, alignItems: "center" }}>{buttons}</div>;
+  return <div style={{ display: "flex" }}>{stars}</div>;
 }
 
 export default function CommentsRatingPage({ onBack }) {
-  const searchParams = useMemo(() => new URLSearchParams(window.location.search), []);
-  const seriesId = searchParams.get("seriesId") || "default-series";
-  const chapterId = searchParams.get("chapterId") || "default-chapter";
-  const storageKey = `fimory:reviews:v1:${seriesId}:${chapterId}`;
-
   const [reviews, setReviews] = useState([]);
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
   const [message, setMessage] = useState("");
-  const [scale, setScale] = useState(1);
+
+  const storageKey = "fimory:reviews:single";
 
   useEffect(() => {
-    try {
-      const raw = localStorage.getItem(storageKey);
-      if (!raw) return;
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed)) setReviews(parsed);
-    } catch {
-      // Ignore corrupted localStorage.
-    }
-  }, [storageKey]);
-
-  useEffect(() => {
-    try {
-      localStorage.setItem(storageKey, JSON.stringify(reviews));
-    } catch {
-      // Ignore write failures (e.g. private mode).
-    }
-  }, [reviews, storageKey]);
-
-  useEffect(() => {
-    const updateScale = () => {
-      // Scale theo chiều ngang màn hình để tránh tràn ngang, đồng thời crop footer khớp.
-      const next = Math.min(1, window.innerWidth / bgW);
-      setScale(Number.isFinite(next) && next > 0 ? next : 1);
-    };
-    updateScale();
-    window.addEventListener("resize", updateScale);
-    return () => window.removeEventListener("resize", updateScale);
+    const raw = localStorage.getItem(storageKey);
+    if (raw) setReviews(JSON.parse(raw));
   }, []);
-
-  const stats = useMemo(() => {
-    const count = reviews.length;
-    const sum = reviews.reduce((acc, r) => acc + (Number(r.rating) || 0), 0);
-    const avg = count ? sum / count : 0;
-    const roundedAvg = Math.round(avg * 10) / 10;
-    return { count, avg: roundedAvg };
-  }, [reviews]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setMessage("");
+    if (!rating || !comment.trim()) return;
 
-    const trimmed = comment.trim();
-    if (!rating) {
-      setMessage("Vui lòng chọn số sao trước khi gửi.");
-      return;
-    }
-    if (!trimmed) {
-      setMessage("Vui lòng nhập nội dung bình luận.");
-      return;
-    }
-
-    const nextReview = {
-      id: `${Date.now()}_${Math.random().toString(16).slice(2)}`,
-      userEmail: getUserEmail(),
+    const newRev = {
+      id: Date.now(),
+      user: "User123@gmail.com",
       rating,
-      comment: trimmed,
-      createdAt: new Date().toISOString(),
+      comment: comment.trim(),
+      date: new Date().toLocaleDateString(),
     };
-    setReviews((prev) => [nextReview, ...prev]);
+    const updated = [newRev, ...reviews];
+    setReviews(updated);
+    localStorage.setItem(storageKey, JSON.stringify(updated));
     setRating(0);
     setComment("");
-    setMessage("Gửi bình luận thành công!");
+    setMessage("Đã gửi bình luận!");
+    setTimeout(() => setMessage(""), 3000);
   };
 
+  const APP_BG = "#0f172a";
+  const NAV_BG = "#131928";
+  const BOX_BG = "#1e1b4b"; // Dark purple/indigo
+  const ACCENT_PURPLE = "#b3a1ff";
+
   return (
-    <div
-      style={{
-        backgroundColor: "#131928",
-        minHeight: "100vh",
-        color: "white",
-        fontFamily: "Roboto, sans-serif",
-        overflowX: "hidden",
-      }}
-    >
-      {/* Phần đầu trang (crop bỏ footer để footer nằm dưới cùng) */}
-      <div style={{ width: bgW * scale, margin: "0 auto" }}>
-        <div style={{ height: footerStart * scale, overflow: "hidden" }}>
-          <img
-            src={figmaBg}
-            alt="Figma top"
-            style={{
-              width: bgW * scale,
-              height: bgH * scale,
-              display: "block",//
-            }}
-          />
-        </div>
-      </div>
-
-      {/* Phần bình luận/đánh giá (frontend-only) */}
-      <div style={{ maxWidth: 1100, margin: "0 auto", padding: "28px 16px 40px 16px" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 16, flexWrap: "wrap" }}>
-          <div style={{ maxWidth: 620 }}>
-            <h1 style={{ fontSize: 40, margin: "0 0 10px 0" }}>Bình luận & Đánh giá</h1>
-            <p style={{ fontSize: 16, color: "#cbd5e1", margin: 0 }}>
-              {stats.count
-                ? `Điểm trung bình: ${stats.avg} (${stats.count} đánh giá)`
-                : "Chưa có đánh giá nào. Hãy là người đầu tiên!"}
-            </p>
+    <div style={{ backgroundColor: APP_BG, minHeight: "100vh", color: "white", fontFamily: "Inter, sans-serif" }}>
+      
+      {/* ── NAVBAR ── */}
+      <nav style={{
+        display: "flex", alignItems: "center", justifyContent: "space-between",
+        padding: "0.8rem 2.5rem", background: NAV_BG, position: "sticky", top: 0, zIndex: 100
+      }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "2.5rem" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10, cursor: "pointer" }} onClick={onBack}>
+             <div style={{ background: "#4f46e5", borderRadius: 8, padding: 8, display: "flex" }}>
+               <img src={imgLogo} alt="Logo" style={{ height: 24 }} />
+             </div>
+             <span style={{ fontSize: 24, fontWeight: "bold", color: "#818cf8" }}>Fimory</span>
           </div>
-
-          {onBack ? (
-            <button
-              type="button"
-              onClick={onBack}
-              style={{
-                border: "1px solid rgba(179,161,255,0.55)",
-                background: "rgba(179,161,255,0.08)",
-                color: "white",
-                padding: "10px 16px",
-                borderRadius: 12,
-                cursor: "pointer",
-                fontWeight: 800,
-                height: 40,
-              }}
-            >
-              Quay lại
-            </button>
-          ) : null}
+          <div style={{ display: "flex", gap: "1.5rem", fontSize: 16, fontWeight: 500 }}>
+             <div style={{ display: "flex", alignItems: "center", gap: 8, cursor: "pointer" }}>
+               <img src={imgOpenBook} alt="Series" style={{ height: 20 }} />
+               <span>Series</span>
+             </div>
+             <span style={{ cursor: "pointer" }}>Categories</span>
+             <span style={{ cursor: "pointer" }}>Favorites</span>
+             <span style={{ cursor: "pointer" }}>History</span>
+          </div>
         </div>
-
-        <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 24, marginTop: 20 }}>
-          {/* Form */}
-          <form
-            onSubmit={handleSubmit}
-            style={{
-              width: "100%",
-              maxWidth: 520,
-              backgroundColor: "#232b3b",
-              padding: 36,
-              borderRadius: 12,
-              boxShadow: "0 4px 16px 0 rgba(0,0,0,0.12)",
-            }}
-          >
-            {message ? (
-              <div
-                style={{
-                  background: message.includes("thành công") ? "#065f46" : "#991b1b",
-                  color: "white",
-                  padding: 10,
-                  borderRadius: 4,
-                  marginBottom: 18,
-                  textAlign: "center",
-                  fontWeight: 700,
-                }}
-              >
-                {message}
-              </div>
-            ) : null}
-
-            <div style={{ fontSize: 22, fontWeight: "bold", marginBottom: 10 }}>Đánh giá của bạn</div>
-            <StarRow value={rating} onChange={(v) => setRating(v)} size={30} />
-
-            <div style={{ marginTop: 18, fontSize: 22, fontWeight: "bold", marginBottom: 10 }}>Bình luận</div>
-            <textarea
-              value={comment}
-              onChange={(e) => setComment(e.target.value)}
-              placeholder="Nhập nội dung bình luận của bạn..."
-              style={{
-                width: "100%",
-                minHeight: 120,
-                resize: "vertical",
-                padding: 12,
-                background: "#334155",
-                border: "none",
-                borderRadius: 4,
-                color: "white",
-                outline: "none",
-              }}
-            />
-
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, marginTop: 18 }}>
-              <button
-                type="submit"
-                style={{
-                  flex: 1,
-                  padding: 14,
-                  backgroundColor: "#2563eb",
-                  color: "white",
-                  border: "none",
-                  borderRadius: 6,
-                  fontSize: 18,
-                  fontWeight: "bold",
-                  cursor: "pointer",
-                }}
-              >
-                Gửi bình luận
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setRating(0);
-                  setComment("");
-                  setMessage("");
-                }}
-                style={{
-                  padding: "14px 16px",
-                  backgroundColor: "transparent",
-                  border: "1px solid rgba(179,161,255,0.55)",
-                  color: "white",
-                  borderRadius: 6,
-                  fontSize: 18,
-                  fontWeight: "bold",
-                  cursor: "pointer",
-                  whiteSpace: "nowrap",
-                }}
-              >
-                Xóa
-              </button>
+        <div style={{ display: "flex", alignItems: "center", gap: "1.5rem" }}>
+          <div style={{ background: ACCENT_PURPLE, borderRadius: 8, display: "flex", alignItems: "center", padding: "0.4rem 1rem", gap: 10, width: 350 }}>
+            <img src={imgSearch} alt="search" style={{ height: 24 }} />
+            <input type="text" placeholder="Tìm truyện ......" style={{ background: "transparent", border: "none", outline: "none", color: "#131928", fontWeight: 600, width: "100%" }} />
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+            <span style={{ fontSize: 24, cursor: "pointer" }}>☼</span>
+            <span style={{ fontSize: 24, cursor: "pointer" }}>🔔</span>
+            <div style={{ display: "flex", alignItems: "center", gap: 8, cursor: "pointer" }}>
+              <img src={imgUser} alt="user" style={{ height: 32 }} />
+              <span style={{ fontSize: 14 }}>User123@gmail.com</span>
             </div>
-          </form>
+          </div>
+        </div>
+      </nav>
 
-          {/* Recent */}
-          <div
-            style={{
-              width: "100%",
-              maxWidth: 520,
-              backgroundColor: "#232b3b",
-              padding: 36,
-              borderRadius: 12,
-              boxShadow: "0 4px 16px 0 rgba(0,0,0,0.12)",
-              alignSelf: "flex-start",
-            }}
-          >
-            <div style={{ fontSize: 22, fontWeight: "bold", marginBottom: 12 }}>Xếp hạng gần đây</div>
-            {!reviews.length ? (
-              <div style={{ color: "#cbd5e1", lineHeight: "26px" }}>
-                Chưa có bình luận nào. Hãy gửi đánh giá đầu tiên!
-              </div>
-            ) : (
-              <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-                {reviews.slice(0, 5).map((r) => (
-                  <div
-                    key={r.id}
-                    style={{
-                      border: "1px solid rgba(179,161,255,0.25)",
-                      borderRadius: 8,
-                      background: "#0b1220",
-                      padding: 14,
-                    }}
-                  >
-                    <div style={{ display: "flex", justifyContent: "space-between", gap: 12, alignItems: "center" }}>
-                      <div style={{ fontWeight: 900 }}>{r.userEmail}</div>
-                      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                        <StarRow value={r.rating} size={18} />
-                        <div style={{ fontWeight: 900, color: "#e5e7eb" }}>{r.rating} sao</div>
-                      </div>
-                    </div>
-                    <div style={{ marginTop: 8, color: "rgba(255,255,255,0.86)", lineHeight: "22px" }}>{r.comment}</div>
-                    <div style={{ marginTop: 8, fontSize: 12, color: "rgba(255,255,255,0.55)" }}>
-                      {new Date(r.createdAt).toLocaleString("vi-VN")}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
+      <main style={{ maxWidth: 1400, margin: "60px auto", padding: "0 40px", display: "grid", gridTemplateColumns: "250px 1fr 300px", gap: 60 }}>
+        
+        {/* Left: Cover & Actions */}
+        <div style={{ display: "flex", flexDirection: "column", gap: 30 }}>
+          <img src={imgCover} alt="Cover" style={{ width: "100%", borderRadius: 4, height: "auto" }} />
+          
+          <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 12, cursor: "pointer" }}>
+                <span style={{ color: "#3b82f6", fontSize: 40 }}>▶</span>
+                <span style={{ fontSize: 20, fontWeight: "bold" }}>Đọc chương mới nhất</span>
+            </div>
+
+            <div style={{ display: "flex", alignItems: "center", gap: 12, cursor: "pointer" }}>
+                <span style={{ color: "#3b82f6", fontSize: 40 }}>💙</span>
+                <span style={{ fontSize: 20, fontWeight: "bold" }}>Theo dõi/ Yêu thích</span>
+            </div>
           </div>
         </div>
 
-        {/* Full comment list */}
-        <div
-          style={{
-            marginTop: 24,
-            backgroundColor: "#232b3b",
-            padding: 36,
-            borderRadius: 12,
-            boxShadow: "0 4px 16px 0 rgba(0,0,0,0.12)",
-          }}
-        >
-          <div style={{ fontSize: 22, fontWeight: "bold", marginBottom: 12 }}>Tất cả bình luận</div>
-          {!reviews.length ? (
-            <div style={{ color: "#cbd5e1" }}>Chưa có bình luận.</div>
-          ) : (
-            <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-              {reviews.map((r) => (
-                <div
-                  key={r.id}
-                  style={{
-                    border: "1px solid rgba(179,161,255,0.18)",
-                    borderRadius: 12,
-                    background: "#0b1220",
-                    padding: 16,
-                  }}
-                >
-                  <div style={{ display: "flex", justifyContent: "space-between", gap: 12, alignItems: "center" }}>
-                    <div style={{ fontWeight: 900 }}>{r.userEmail}</div>
-                    <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                      <StarRow value={r.rating} size={20} />
-                      <div style={{ fontWeight: 900, color: "#e5e7eb" }}>{r.rating} sao</div>
-                    </div>
-                  </div>
-                  <div style={{ marginTop: 8, color: "rgba(255,255,255,0.86)", lineHeight: "22px" }}>{r.comment}</div>
-                  <div style={{ marginTop: 8, fontSize: 12, color: "rgba(255,255,255,0.55)" }}>
-                    {new Date(r.createdAt).toLocaleString("vi-VN")}
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
+        {/* Center: Story Info */}
+        <div style={{ display: "flex", flexDirection: "column", gap: 40 }}>
+          <h1 style={{ fontSize: 32, fontWeight: "bold", margin: 0 }}>Đại Tượng Vô Hình</h1>
+          
+          <div style={{ display: "flex", flexDirection: "column", gap: 20, fontSize: 18 }}>
+             <div><span style={{ fontWeight: "bold" }}>Tác giả:</span> Đang cập nhật</div>
+             <div><span style={{ fontWeight: "bold" }}>Thể loại:</span> Hành động, Viễn tưởng</div>
+             <div><span style={{ fontWeight: "bold" }}>Trạng thái:</span> Đang cập nhật</div>
+          </div>
 
-      {/* Footer (crop từ ảnh Figma đặt ở dưới cùng) */}
-      <div style={{ width: bgW * scale, margin: "0 auto" }}>
-        <div style={{ height: footerH * scale, overflow: "hidden" }}>
-          <img
-            src={figmaBg}
-            alt="Figma footer"
-            style={{
-              width: bgW * scale,
-              height: bgH * scale,
-              display: "block",
-              transform: `translateY(-${footerStart * scale}px)`,
-            }}
-          />
+          <section>
+            <h2 style={{ fontSize: 20, fontWeight: "bold", marginBottom: 15 }}>GIỚI THIỆU</h2>
+            <div style={{ background: BOX_BG, padding: "20px", borderRadius: 4, fontSize: 16, lineHeight: "1.6", color: "#ccc" }}>
+              Nữ chính xuất hiện trong một lần tai nạn xe bị sinh vật bí ẩn ......
+            </div>
+          </section>
+
+          <section style={{ display: "flex", alignItems: "center", gap: 30 }}>
+            <h2 style={{ fontSize: 20, fontWeight: "bold", margin: 0 }}>ĐÁNH GIÁ</h2>
+            <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
+              <span style={{ fontSize: 28, fontWeight: "bold" }}>4.0</span>
+              <StarRating value={4} size={36} />
+            </div>
+          </section>
         </div>
-      </div>
+
+        {/* Right: Comments Panel */}
+        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+          <h2 style={{ fontSize: 24, fontWeight: "bold", margin: "0 0 10px 0", textAlign: "center" }}>BÌNH LUẬN</h2>
+          <div style={{ background: BOX_BG, borderRadius: 4, padding: "20px", minHeight: 400, display: "flex", flexDirection: "column", gap: 20 }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+               <div style={{ display: "flex", gap: 15, alignItems: "center" }}>
+                   <div style={{ width: 44, height: 44, background: "#475569", borderRadius: "50%", display: "flex", justifyContent: "center", alignItems: "center" }}>
+                      <span style={{ fontSize: 20 }}>👤</span>
+                   </div>
+                   <span style={{ fontWeight: "bold", fontSize: 18 }}>Hay</span>
+               </div>
+            </div>
+
+            {/* Quick Comment Form */}
+            <form onSubmit={handleSubmit} style={{ marginTop: "auto", display: "flex", flexDirection: "column", gap: 10 }}>
+               <StarRating value={rating} onChange={setRating} size={18} />
+               <textarea 
+                  value={comment}
+                  onChange={(e) => setComment(e.target.value)}
+                  placeholder="Để lại bình luận..."
+                  style={{ width: "100%", background: "#334155", border: "none", borderRadius: 4, padding: 10, color: "white", outline: "none", resize: "none" }}
+               />
+               <button type="submit" style={{ background: ACCENT_PURPLE, border: "none", borderRadius: 4, padding: "8px", fontWeight: "bold", cursor: "pointer", color: "#131928" }}>Gửi</button>
+            </form>
+          </div>
+        </div>
+      </main>
+
+      {/* ── FOOTER ── */}
+      <footer style={{ background: NAV_BG, borderTop: `6px solid ${ACCENT_PURPLE}`, padding: "3rem 4rem" }}>
+         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+            <div style={{ display: "flex", gap: "5rem" }}>
+               <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                    <div style={{ background: "#4f46e5", borderRadius: 8, padding: 6, display: "flex" }}>
+                       <img src={imgLogo} alt="Logo" style={{ height: 20 }} />
+                    </div>
+                    <span style={{ fontSize: 20, fontWeight: "bold", color: "#818cf8" }}>Fimory</span>
+                  </div>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 8, fontSize: 16 }}>
+                    <span style={{ cursor: "pointer" }}>Chính sách bảo mật</span>
+                    <span style={{ cursor: "pointer" }}>Điều khoản sử dụng</span>
+                  </div>
+               </div>
+               <div style={{ display: "flex", flexDirection: "column", gap: 15, fontSize: 16, paddingTop: 6 }}>
+                  <span style={{ cursor: "pointer", fontWeight: "bold" }}>Giới thiệu</span>
+                  <span style={{ cursor: "pointer", fontWeight: "bold" }}>Hỏi đáp</span>
+               </div>
+               <div style={{ display: "flex", flexDirection: "column", gap: 12, fontSize: 16, paddingTop: 6 }}>
+                  <span style={{ cursor: "pointer", fontWeight: "bold" }}>Liên hệ</span>
+               </div>
+            </div>
+            <div style={{ display: "flex", gap: "1.5rem" }}>
+               <img src={imgFacebook} alt="fb" style={{ height: 32 }} />
+               <img src={imgTelegram} alt="tg" style={{ height: 32 }} />
+               <img src={imgDiscord} alt="ds" style={{ height: 32 }} />
+               <img src={imgTikTok} alt="tk" style={{ height: 32 }} />
+            </div>
+         </div>
+      </footer>
     </div>
   );
 }
