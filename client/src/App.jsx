@@ -2,56 +2,50 @@ import { useState, useEffect } from "react";
 import PhamDucHuyTrangChu from "./components/PhamDucHuyTrangChu";
 import DangKy from "./components/DangKy";
 import DangNhap from "./components/DangNhap";
-import ThongTinUser from "./components/ThongTinUser";
-import TimKiem from "./components/TimKiem";
+import UploadStory from "./components/UploadStory";
+import ChiTietTruyen from "./components/ChiTietTruyen";
 
 function App() {
-  const [view, setView] = useState("home");
-  const [user, setUser] = useState(null);
-
-  useEffect(() => {
-    const savedUser = localStorage.getItem("user");
-    if (savedUser) {
-      setUser(JSON.parse(savedUser));
-    }
-  }, []);
-
-  const handleLoginSuccess = (userData) => {
-    setUser(userData);
-    localStorage.setItem("user", JSON.stringify(userData));
-    setView("home");
+  // Read initial view from URL path (e.g., /upload -> "upload")
+  const getInitialView = () => {
+    const path = window.location.pathname.replace(/^\/+/, ""); // remove leading slash
+    return path.toLowerCase() || "home";
   };
 
-  const handleLogout = () => {
-    setUser(null);
-    localStorage.removeItem("user");
-    localStorage.removeItem("token");
-    setView("home");
+  const [view, setView] = useState(getInitialView());
+
+  // Update URL whenever view state changes
+  useEffect(() => {
+    if (view === "home") {
+      window.history.replaceState(null, "", "/");
+    } else {
+      window.history.replaceState(null, "", `/${view}`);
+    }
+  }, [view]);
+
+  // Navigate using State
+  const goTo = (newView) => {
+    setView(newView);
+    window.scrollTo(0, 0);
   };
 
   if (view === "register") {
-    return <DangKy onBack={() => setView("login")} />;
+    return <DangKy onBack={() => goTo("login")} />;
   }
 
   if (view === "login") {
-    return <DangNhap onBack={() => setView("home")} onRegister={() => setView("register")} onSuccess={handleLoginSuccess} />;
+    return <DangNhap onBack={() => goTo("home")} onRegister={() => goTo("register")} onSuccess={() => goTo("home")} />;
   }
 
-  if (view === "profile") {
-    return <ThongTinUser user={user} onBack={() => setView("home")} />;
+  if (view === "upload") {
+    return <UploadStory onHomeClick={() => goTo("home")} />;
   }
 
-  if (view === "search") {
-    return <TimKiem onBackHome={() => setView("home")} onUserClick={() => setView("profile")} />;
+  if (view === "chitiettruyen") {
+    return <ChiTietTruyen onHomeClick={() => goTo("home")} />;
   }
 
-  return <PhamDucHuyTrangChu 
-    user={user} 
-    onUserClick={() => setView("profile")} 
-    onSearchClick={() => setView("search")} 
-    onLoginClick={() => setView("login")}
-    onLogout={handleLogout}
-  />;
+  return <PhamDucHuyTrangChu onUserClick={() => goTo("login")} onUploadClick={() => goTo("upload")} />;
 }
 
 export default App;

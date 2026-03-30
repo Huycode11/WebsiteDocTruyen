@@ -1,0 +1,82 @@
+[
+  {
+    "id": "30:3",
+    "name": "Luân-Thôn tin User",
+    "type": "FRAME"
+  },
+  {
+    "id": "71:96",
+    "name": "Thành - Đăng ký",
+    "type": "COMPONENT"
+  },
+  {
+    "id": "93:318",
+    "name": "Thành - Đăng nhập",
+    "type": "GROUP"
+  },
+  {
+    "id": "30:4",
+    "name": "Luan-Danh sách yêu thích truyện",
+    "type": "FRAME"
+  },
+  {
+    "id": "57:8",
+    "name": "PhamVanHuy_ChiTietTruyen",
+    "type": "FRAME"
+  },
+  {
+    "id": "57:56",
+    "name": "PhamVanHuy_TuyChinhTruyen",
+    "type": "FRAME"
+  },
+  {
+    "id": "81:268",
+    "name": "PhamDucHuy-TrangChu",
+    "type": "FRAME"
+  },
+  {
+    "id": "81:310",
+    "name": "PhamDucHuy-TimKiem",
+    "type": "FRAME"
+  },
+  {
+    "id": "81:341",
+    "name": "play_arrow_filled",
+    "type": "INSTANCE"
+  },
+  {
+    "id": "81:342",
+    "name": "play_arrow_filled",
+    "type": "INSTANCE"
+  },
+  {
+    "id": "77:242",
+    "name": "Hoang Thanh Sang",
+    "type": "FRAME"
+  },
+  {
+    "id": "58:18",
+    "name": "Hoang Thanh Sang",
+    "type": "FRAME"
+  },
+  {
+    "id": "94:61",
+    "name": "Navbar",
+    "type": "FRAME"
+  },
+  {
+    "id": "208:66",
+    "name": "DamTrungHieu-ChatBot",
+    "type": "COMPONENT"
+  },
+  {
+    "id": "221:64",
+    "name": "DamTrungHieu-Lịch sử xem",
+    "type": "FRAME"
+  },
+  {
+    "id": "223:121",
+    "name": "akar-icons:book",
+    "type": "FRAME"
+  }
+]
