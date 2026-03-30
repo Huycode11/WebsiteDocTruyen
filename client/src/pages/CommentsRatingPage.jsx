@@ -144,7 +144,7 @@ export default function CommentsRatingPage({ onBack }) {
             style={{
               width: bgW * scale,
               height: bgH * scale,
-              display: "block",
+              display: "block",//
             }}
           />
         </div>
