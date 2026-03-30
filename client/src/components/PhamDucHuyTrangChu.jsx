@@ -15,7 +15,7 @@ const imgThongBao = "https://www.figma.com/api/mcp/asset/9dbaced7-0b92-475e-8a8d
 const imgNgiDung = "https://www.figma.com/api/mcp/asset/a33a2536-3008-4ac1-87af-011fd3bb59d1";
 const imgImage4 = "https://www.figma.com/api/mcp/asset/166ab19c-ff41-465e-a693-ba9fe242d88b";
 
-export default function PhamDucHuyTrangChu({ onUserClick }) {
+export default function PhamDucHuyTrangChu({ onUserClick, onSearchClick }) {
   return (
     <div style={{ backgroundColor: "#131928", position: "relative", width: "2805px", minHeight: "2644px", overflowX: "hidden" }}>
       <p style={{ position: "absolute", fontFamily: "Inter, sans-serif", fontSize: "30px", left: "203px", top: "61px", color: "black", whiteSpace: "nowrap" }}>{` `}</p>
@@ -123,14 +123,14 @@ export default function PhamDucHuyTrangChu({ onUserClick }) {
         <p style={{ position: "absolute", fontFamily: "Inter, sans-serif", fontSize: "30px", color: "white", left: "579px", top: "45px", whiteSpace: "nowrap" }}>
           Categories
         </p>
-        <div style={{ position: "absolute", backgroundColor: "#b3a1ff", height: "71px", width: "1015px", left: "1059px", top: "20px", borderRadius: "12px", overflow: "hidden" }}>
+        <button type="button" onClick={onSearchClick} style={{ position: "absolute", backgroundColor: "#b3a1ff", height: "71px", width: "1015px", left: "1059px", top: "20px", borderRadius: "12px", overflow: "hidden", border: "none", padding: 0, cursor: "pointer" }}>
           <div style={{ position: "absolute", height: "64px", width: "64px", left: "17px", top: "4px" }}>
             <img alt="" src={imgSearch} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "contain" }} />
           </div>
           <p style={{ position: "absolute", fontFamily: "Inter, sans-serif", fontSize: "30px", color: "black", left: "110px", top: "18px", whiteSpace: "nowrap" }}>
             Tìm truyện ......
           </p>
-        </div>
+        </button>
         <div style={{ position: "absolute", height: "79px", width: "79px", left: "2109px", top: "21px" }}>
           <img alt="" src={imgNutSangTi} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "contain" }} />
         </div>
