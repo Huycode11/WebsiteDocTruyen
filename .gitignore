@@ -30,3 +30,5 @@ out/
 .gemini/
 .agents/
 /tmp/
+
+mcp.json

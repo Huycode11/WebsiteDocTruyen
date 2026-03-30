@@ -48,7 +48,12 @@ export default function DangNhap({ onBack, onRegister, onSuccess }) {
         if (data.token) {
           localStorage.setItem("token", data.token);
         }
-        setTimeout(() => onSuccess(), 1000);
+        // Pass the user object to the onSuccess callback
+        setTimeout(() => onSuccess({
+          username: data.username,
+          userId: data.userId,
+          email: formData.email // We use email from form since backend might not return it
+        }), 1000);
       } else {
         setMessage(data.error || "Login failed. Please check your credentials.");
       }
