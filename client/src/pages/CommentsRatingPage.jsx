@@ -1,11 +1,16 @@
 import React, { useEffect, useMemo, useState } from "react";
+
+const imgLogo = "https://www.figma.com/api/mcp/asset/9be4cec6-9b5d-427f-8a01-29247089f437";
+const imgFacebook = "https://www.figma.com/api/mcp/asset/9fd9aaea-1284-4c09-ba10-a807afac6270";
+const imgTelegram = "https://www.figma.com/api/mcp/asset/919f5117-4fc0-484d-9e71-b8d991371972";
+const imgTikTok = "https://www.figma.com/api/mcp/asset/18138309-e035-4154-ad53-e3e719aa19ca";
+const imgDiscord = "https://www.figma.com/api/mcp/asset/cfc86f8e-c8fe-4528-a9cd-d994e7e6dd3a";
 import figmaBg from "../figma_77_242.png";
 
 const bgW = 2773;
 const bgH = 1578;
-const footerStart = 1251; // derived from Figma frame geometry (matches split in screenshot)
-const footerH = bgH - footerStart; // 327
-
+const footerStart = 1251; // y bắt đầu của footer trong node 77:242
+const footerH = bgH - footerStart;
 function getUserEmail() {
   // Đăng nhập hiện tại chỉ lưu token, nên email lấy từ trường email khi submit.
   return localStorage.getItem("userEmail") || "User123@gmail.com";
@@ -56,17 +61,6 @@ export default function CommentsRatingPage({ onBack }) {
   const [scale, setScale] = useState(1);
 
   useEffect(() => {
-    const updateScale = () => {
-      // Scale toàn bộ canvas để tránh tràn ngang khi màn hình nhỏ hơn thiết kế gốc.
-      const next = Math.min(1, window.innerWidth / bgW);
-      setScale(Number.isFinite(next) && next > 0 ? next : 1);
-    };
-    updateScale();
-    window.addEventListener("resize", updateScale);
-    return () => window.removeEventListener("resize", updateScale);
-  }, []);
-
-  useEffect(() => {
     try {
       const raw = localStorage.getItem(storageKey);
       if (!raw) return;
@@ -84,6 +78,17 @@ export default function CommentsRatingPage({ onBack }) {
       // Ignore write failures (e.g. private mode).
     }
   }, [reviews, storageKey]);
+
+  useEffect(() => {
+    const updateScale = () => {
+      // Scale theo chiều ngang màn hình để tránh tràn ngang, đồng thời crop footer khớp.
+      const next = Math.min(1, window.innerWidth / bgW);
+      setScale(Number.isFinite(next) && next > 0 ? next : 1);
+    };
+    updateScale();
+    window.addEventListener("resize", updateScale);
+    return () => window.removeEventListener("resize", updateScale);
+  }, []);
 
   const stats = useMemo(() => {
     const count = reviews.length;
@@ -130,27 +135,34 @@ export default function CommentsRatingPage({ onBack }) {
         overflowX: "hidden",
       }}
     >
-      {/* Outer container set scaled width để tránh tràn ngang do transform */}
-      <div style={{ width: bgW * scale, margin: "0 auto", position: "relative" }}>
-        <div style={{ transform: `scale(${scale})`, transformOrigin: "top left", width: bgW }}>
-        {/* Top (crop off footer) */}
-        <div style={{ height: footerStart, overflow: "hidden" }}>
+      {/* Phần đầu trang (crop bỏ footer để footer nằm dưới cùng) */}
+      <div style={{ width: bgW * scale, margin: "0 auto" }}>
+        <div style={{ height: footerStart * scale, overflow: "hidden" }}>
           <img
             src={figmaBg}
-            alt="Figma layout"
-            style={{ width: bgW, height: bgH, display: "block" }}
+            alt="Figma top"
+            style={{
+              width: bgW * scale,
+              height: bgH * scale,
+              display: "block",
+            }}
           />
         </div>
+      </div>
 
-        {/* Comment/Rating (frontend-only) */}
-        <div style={{ padding: "28px 60px 24px 60px", backgroundColor: "#131928" }}>
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 24 }}>
-            <div>
-              <div style={{ fontSize: 34, fontWeight: 800, marginBottom: 8 }}>Bình luận & Đánh giá</div>
-              <div style={{ color: "rgba(255,255,255,0.8)", fontSize: 16 }}>
-                {stats.count ? `Điểm trung bình: ${stats.avg} (${stats.count} đánh giá)` : "Chưa có đánh giá nào. Hãy là người đầu tiên!"}
-              </div>
-            </div>
+      {/* Phần bình luận/đánh giá (frontend-only) */}
+      <div style={{ maxWidth: 1100, margin: "0 auto", padding: "28px 16px 40px 16px" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 16, flexWrap: "wrap" }}>
+          <div style={{ maxWidth: 620 }}>
+            <h1 style={{ fontSize: 40, margin: "0 0 10px 0" }}>Bình luận & Đánh giá</h1>
+            <p style={{ fontSize: 16, color: "#cbd5e1", margin: 0 }}>
+              {stats.count
+                ? `Điểm trung bình: ${stats.avg} (${stats.count} đánh giá)`
+                : "Chưa có đánh giá nào. Hãy là người đầu tiên!"}
+            </p>
+          </div>
+
+          {onBack ? (
             <button
               type="button"
               onClick={onBack}
@@ -161,158 +173,140 @@ export default function CommentsRatingPage({ onBack }) {
                 padding: "10px 16px",
                 borderRadius: 12,
                 cursor: "pointer",
-                fontWeight: 700,
+                fontWeight: 800,
+                height: 40,
               }}
             >
               Quay lại
             </button>
-          </div>
+          ) : null}
+        </div>
 
-          <div style={{ marginTop: 20, display: "grid", gridTemplateColumns: "1.05fr 0.95fr", gap: 24 }}>
-            <form
-              onSubmit={handleSubmit}
-              style={{
-                border: "1px solid rgba(179,161,255,0.25)",
-                borderRadius: 16,
-                background: "rgba(255,255,255,0.03)",
-                padding: 22,
-              }}
-            >
-              <div style={{ fontSize: 18, fontWeight: 800, marginBottom: 10 }}>Đánh giá của bạn</div>
-              <StarRow value={rating} onChange={(v) => setRating(v)} />
-              <div style={{ marginTop: 16, fontSize: 18, fontWeight: 800, marginBottom: 10 }}>Bình luận</div>
-              <textarea
-                value={comment}
-                onChange={(e) => setComment(e.target.value)}
-                placeholder="Nhập nội dung bình luận của bạn..."
+        <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 24, marginTop: 20 }}>
+          {/* Form */}
+          <form
+            onSubmit={handleSubmit}
+            style={{
+              width: "100%",
+              maxWidth: 520,
+              backgroundColor: "#232b3b",
+              padding: 36,
+              borderRadius: 12,
+              boxShadow: "0 4px 16px 0 rgba(0,0,0,0.12)",
+            }}
+          >
+            {message ? (
+              <div
                 style={{
-                  width: "100%",
-                  minHeight: 120,
-                  resize: "vertical",
-                  padding: 14,
-                  borderRadius: 12,
-                  border: "1px solid rgba(179,161,255,0.25)",
-                  background: "rgba(17,24,39,0.65)",
+                  background: message.includes("thành công") ? "#065f46" : "#991b1b",
                   color: "white",
-                  outline: "none",
+                  padding: 10,
+                  borderRadius: 4,
+                  marginBottom: 18,
+                  textAlign: "center",
+                  fontWeight: 700,
                 }}
-              />
-
-              {message ? (
-                <div
-                  style={{
-                    marginTop: 14,
-                    padding: 12,
-                    borderRadius: 10,
-                    background: message.includes("thành công") ? "rgba(16,185,129,0.15)" : "rgba(239,68,68,0.15)",
-                    border: "1px solid rgba(179,161,255,0.25)",
-                    color: "white",
-                    fontWeight: 700,
-                  }}
-                >
-                  {message}
-                </div>
-              ) : null}
-
-              <div style={{ marginTop: 14, display: "flex", gap: 12, alignItems: "center" }}>
-                <button
-                  type="submit"
-                  style={{
-                    flex: 1,
-                    border: "none",
-                    background: "#b3a1ff",
-                    color: "#131928",
-                    fontSize: 18,
-                    fontWeight: 900,
-                    padding: "12px 16px",
-                    borderRadius: 12,
-                    cursor: "pointer",
-                  }}
-                >
-                  Gửi bình luận
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setRating(0);
-                    setComment("");
-                    setMessage("");
-                  }}
-                  style={{
-                    border: "1px solid rgba(179,161,255,0.55)",
-                    background: "rgba(179,161,255,0.08)",
-                    color: "white",
-                    fontWeight: 800,
-                    padding: "12px 14px",
-                    borderRadius: 12,
-                    cursor: "pointer",
-                  }}
-                >
-                  Xóa
-                </button>
+              >
+                {message}
               </div>
-            </form>
+            ) : null}
 
-            <div style={{ border: "1px solid rgba(179,161,255,0.25)", borderRadius: 16, background: "rgba(255,255,255,0.03)", padding: 22 }}>
-              <div style={{ fontSize: 18, fontWeight: 800, marginBottom: 12 }}>Xếp hạng gần đây</div>
-              {!reviews.length ? (
-                <div style={{ color: "rgba(255,255,255,0.75)", lineHeight: "24px" }}>
-                  Chưa có bình luận nào. Hãy gửi đánh giá đầu tiên!
-                </div>
-              ) : (
-                <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-                  {reviews.slice(0, 5).map((r) => (
-                    <div
-                      key={r.id}
-                      style={{
-                        border: "1px solid rgba(179,161,255,0.18)",
-                        borderRadius: 14,
-                        background: "rgba(17,24,39,0.55)",
-                        padding: 14,
-                      }}
-                    >
-                      <div style={{ display: "flex", justifyContent: "space-between", gap: 12, alignItems: "center" }}>
-                        <div style={{ fontWeight: 900 }}>{r.userEmail}</div>
-                        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                          <StarRow value={r.rating} size={18} />
-                          <div style={{ fontWeight: 900, color: "rgba(255,255,255,0.85)" }}>{r.rating}.0</div>
-                        </div>
-                      </div>
-                      <div style={{ marginTop: 8, color: "rgba(255,255,255,0.86)", lineHeight: "22px" }}>
-                        {r.comment}
-                      </div>
-                      <div style={{ marginTop: 8, fontSize: 12, color: "rgba(255,255,255,0.55)" }}>
-                        {new Date(r.createdAt).toLocaleString("vi-VN")}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
+            <div style={{ fontSize: 22, fontWeight: "bold", marginBottom: 10 }}>Đánh giá của bạn</div>
+            <StarRow value={rating} onChange={(v) => setRating(v)} size={30} />
+
+            <div style={{ marginTop: 18, fontSize: 22, fontWeight: "bold", marginBottom: 10 }}>Bình luận</div>
+            <textarea
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
+              placeholder="Nhập nội dung bình luận của bạn..."
+              style={{
+                width: "100%",
+                minHeight: 120,
+                resize: "vertical",
+                padding: 12,
+                background: "#334155",
+                border: "none",
+                borderRadius: 4,
+                color: "white",
+                outline: "none",
+              }}
+            />
+
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, marginTop: 18 }}>
+              <button
+                type="submit"
+                style={{
+                  flex: 1,
+                  padding: 14,
+                  backgroundColor: "#2563eb",
+                  color: "white",
+                  border: "none",
+                  borderRadius: 6,
+                  fontSize: 18,
+                  fontWeight: "bold",
+                  cursor: "pointer",
+                }}
+              >
+                Gửi bình luận
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setRating(0);
+                  setComment("");
+                  setMessage("");
+                }}
+                style={{
+                  padding: "14px 16px",
+                  backgroundColor: "transparent",
+                  border: "1px solid rgba(179,161,255,0.55)",
+                  color: "white",
+                  borderRadius: 6,
+                  fontSize: 18,
+                  fontWeight: "bold",
+                  cursor: "pointer",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                Xóa
+              </button>
             </div>
-          </div>
+          </form>
 
-          {/* Full comment list */}
-          <div style={{ marginTop: 22, border: "1px solid rgba(179,161,255,0.25)", borderRadius: 16, background: "rgba(255,255,255,0.03)", padding: 22 }}>
-            <div style={{ fontSize: 18, fontWeight: 800, marginBottom: 12 }}>Tất cả bình luận</div>
+          {/* Recent */}
+          <div
+            style={{
+              width: "100%",
+              maxWidth: 520,
+              backgroundColor: "#232b3b",
+              padding: 36,
+              borderRadius: 12,
+              boxShadow: "0 4px 16px 0 rgba(0,0,0,0.12)",
+              alignSelf: "flex-start",
+            }}
+          >
+            <div style={{ fontSize: 22, fontWeight: "bold", marginBottom: 12 }}>Xếp hạng gần đây</div>
             {!reviews.length ? (
-              <div style={{ color: "rgba(255,255,255,0.75)" }}>Chưa có bình luận.</div>
+              <div style={{ color: "#cbd5e1", lineHeight: "26px" }}>
+                Chưa có bình luận nào. Hãy gửi đánh giá đầu tiên!
+              </div>
             ) : (
               <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-                {reviews.map((r) => (
+                {reviews.slice(0, 5).map((r) => (
                   <div
                     key={r.id}
                     style={{
-                      border: "1px solid rgba(179,161,255,0.18)",
-                      borderRadius: 14,
-                      background: "rgba(17,24,39,0.55)",
-                      padding: 16,
+                      border: "1px solid rgba(179,161,255,0.25)",
+                      borderRadius: 8,
+                      background: "#0b1220",
+                      padding: 14,
                     }}
                   >
                     <div style={{ display: "flex", justifyContent: "space-between", gap: 12, alignItems: "center" }}>
                       <div style={{ fontWeight: 900 }}>{r.userEmail}</div>
                       <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                        <StarRow value={r.rating} size={20} />
-                        <div style={{ fontWeight: 900, color: "rgba(255,255,255,0.85)" }}>{r.rating} sao</div>
+                        <StarRow value={r.rating} size={18} />
+                        <div style={{ fontWeight: 900, color: "#e5e7eb" }}>{r.rating} sao</div>
                       </div>
                     </div>
                     <div style={{ marginTop: 8, color: "rgba(255,255,255,0.86)", lineHeight: "22px" }}>{r.comment}</div>
@@ -326,14 +320,62 @@ export default function CommentsRatingPage({ onBack }) {
           </div>
         </div>
 
-        {/* Bottom (footer from crop) */}
-        <div style={{ height: footerH, overflow: "hidden" }}>
+        {/* Full comment list */}
+        <div
+          style={{
+            marginTop: 24,
+            backgroundColor: "#232b3b",
+            padding: 36,
+            borderRadius: 12,
+            boxShadow: "0 4px 16px 0 rgba(0,0,0,0.12)",
+          }}
+        >
+          <div style={{ fontSize: 22, fontWeight: "bold", marginBottom: 12 }}>Tất cả bình luận</div>
+          {!reviews.length ? (
+            <div style={{ color: "#cbd5e1" }}>Chưa có bình luận.</div>
+          ) : (
+            <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+              {reviews.map((r) => (
+                <div
+                  key={r.id}
+                  style={{
+                    border: "1px solid rgba(179,161,255,0.18)",
+                    borderRadius: 12,
+                    background: "#0b1220",
+                    padding: 16,
+                  }}
+                >
+                  <div style={{ display: "flex", justifyContent: "space-between", gap: 12, alignItems: "center" }}>
+                    <div style={{ fontWeight: 900 }}>{r.userEmail}</div>
+                    <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                      <StarRow value={r.rating} size={20} />
+                      <div style={{ fontWeight: 900, color: "#e5e7eb" }}>{r.rating} sao</div>
+                    </div>
+                  </div>
+                  <div style={{ marginTop: 8, color: "rgba(255,255,255,0.86)", lineHeight: "22px" }}>{r.comment}</div>
+                  <div style={{ marginTop: 8, fontSize: 12, color: "rgba(255,255,255,0.55)" }}>
+                    {new Date(r.createdAt).toLocaleString("vi-VN")}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Footer (crop từ ảnh Figma đặt ở dưới cùng) */}
+      <div style={{ width: bgW * scale, margin: "0 auto" }}>
+        <div style={{ height: footerH * scale, overflow: "hidden" }}>
           <img
             src={figmaBg}
             alt="Figma footer"
-            style={{ width: bgW, height: bgH, display: "block", transform: `translateY(-${footerStart}px)` }}
+            style={{
+              width: bgW * scale,
+              height: bgH * scale,
+              display: "block",
+              transform: `translateY(-${footerStart * scale}px)`,
+            }}
           />
-        </div>
         </div>
       </div>
     </div>
