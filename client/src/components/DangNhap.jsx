@@ -45,7 +45,6 @@ export default function DangNhap({ onBack, onRegister, onSuccess }) {
       if (response.ok) {
         setMessage("Đăng nhập thành công!");
         // Store token if needed, or just redirect
-        localStorage.setItem("userEmail", formData.email);
         if (data.token) {
           localStorage.setItem("token", data.token);
         }
