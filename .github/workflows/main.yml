@@ -13,15 +13,15 @@ jobs:
     - name: Login Docker Hub
       uses: docker/login-action@v3
       with:
-        username: ${{ secrets.DOCKER_HUB_USERNAME }}
-        password: ${{ secrets.DOCKER_HUB_TOKEN }}
+        username: vanhuy04
+        password: dckr_pat_ViPUfMa4MUGEy0sfZ2PZUZFyHq4
 
     - name: Build & Push Backend
       uses: docker/build-push-action@v5
       with:
         context: ./server
         push: true
-        tags: vanhuy04/websitedoctruyen-server:latest
+        tags: vanhuy04/websitedoctruyen-servers:latest
 
     - name: Build & Push Frontend
       uses: docker/build-push-action@v5
