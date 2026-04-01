@@ -5,10 +5,11 @@ on:
     branches: [ "main" ] # Đổi về "main" nếu bạn muốn chạy khi merge vào main
 jobs:
   build-and-push:
-  runs-on: ubuntu-latest
-  steps:
+    runs-on: ubuntu-latest
+    steps:
     - name: Checkout code
       uses: actions/checkout@v4
+
     - name: Login Docker Hub
       uses: docker/login-action@v3
       with:
@@ -20,7 +21,7 @@ jobs:
       with:
         context: ./server
         push: true
-        tags: vanhuy04/websitedoctruyen-servers:latest
+        tags: vanhuy04/websitedoctruyen-server:latest
 
     - name: Build & Push Frontend
       uses: docker/build-push-action@v5
