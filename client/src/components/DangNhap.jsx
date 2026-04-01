@@ -6,7 +6,15 @@ const imgTelegram = "https://www.figma.com/api/mcp/asset/919f5117-4fc0-484d-9e71
 const imgTikTok = "https://www.figma.com/api/mcp/asset/18138309-e035-4154-ad53-e3e719aa19ca";
 const imgDiscord = "https://www.figma.com/api/mcp/asset/cfc86f8e-c8fe-4528-a9cd-d994e7e6dd3a";
 
-export default function DangNhap({ onBack, onRegister, onSuccess }) {
+const imgThemeToggle = "https://www.figma.com/api/mcp/asset/46247a4e-68a5-4cee-8ff5-5379e6a32174";
+
+export default function DangNhap({ onBack, onRegister, onSuccess, theme, onThemeToggle }) {
+  const isDark = theme === "dark";
+  const APP_BG = isDark ? "#0f172a" : "#dbeafe";
+  const FORM_BG = isDark ? "#232b3b" : "white";
+  const TEXT_COLOR = isDark ? "white" : "#1e293b";
+  const INPUT_BG = isDark ? "#334155" : "#f1f5f9";
+
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -65,22 +73,28 @@ export default function DangNhap({ onBack, onRegister, onSuccess }) {
   };
 
   return (
-    <div style={{ backgroundColor: "#0f172a", minHeight: "100vh", position: "relative", width: "100%", color: "white", fontFamily: "Roboto, sans-serif" }}>
+    <div style={{ backgroundColor: APP_BG, minHeight: "100vh", position: "relative", width: "100%", color: TEXT_COLOR, fontFamily: "Roboto, sans-serif" }}>
       {/* Header */}
       <div style={{ display: "flex", justifyContent: "center", paddingTop: 40, gap: 10, alignItems: "center" }}>
         <img src={imgLogo} alt="Logo" style={{ height: 40 }} />
         <span style={{ fontSize: 24, fontWeight: "bold", color: "#818cf8" }}>Fimory</span>
+        <div 
+          onClick={onThemeToggle} 
+          style={{ cursor: "pointer", marginLeft: 20, display: "flex", alignItems: "center" }}
+        >
+          <img src={imgThemeToggle} alt="Theme" style={{ height: 28 }} />
+        </div>
       </div>
       <h1 style={{ textAlign: "center", fontSize: 40, marginTop: 20, marginBottom: 10 }}>Welcome back</h1>
-      <p style={{ textAlign: "center", fontSize: 16, color: "#cbd5e1", marginBottom: 30 }}>Sign in to your account to continue</p>
+      <p style={{ textAlign: "center", fontSize: 16, color: isDark ? "#cbd5e1" : "#475569", marginBottom: 30 }}>Sign in to your account to continue</p>
 
       {/* Form */}
-      <form onSubmit={handleSubmit} style={{ maxWidth: 420, margin: "0 auto", backgroundColor: "#232b3b", padding: 36, borderRadius: 12, boxShadow: "0 4px 16px 0 rgba(0,0,0,0.12)", marginBottom: 40 }}>
+      <form onSubmit={handleSubmit} style={{ maxWidth: 420, margin: "0 auto", backgroundColor: FORM_BG, padding: 36, borderRadius: 12, boxShadow: isDark ? "0 4px 16px 0 rgba(0,0,0,0.12)" : "0 4px 16px 0 rgba(0,0,0,0.08)", marginBottom: 40 }}>
         {message && (
           <div style={{ background: "#065f46", color: "white", padding: 10, borderRadius: 4, marginBottom: 18, textAlign: "center" }}>{message}</div>
         )}
         <div style={{ marginBottom: 18 }}>
-          <label style={{ display: "block", marginBottom: 6, color: "#cbd5e1" }}>Email Address</label>
+          <label style={{ display: "block", marginBottom: 6, color: isDark ? "#cbd5e1" : "#475569" }}>Email Address</label>
           <input
             type="email"
             name="email"
@@ -88,11 +102,11 @@ export default function DangNhap({ onBack, onRegister, onSuccess }) {
             onChange={handleChange}
             placeholder="Enter your email"
             required
-            style={{ width: "100%", padding: 12, background: "#334155", border: "none", borderRadius: 4, color: "white" }}
+            style={{ width: "100%", padding: 12, background: INPUT_BG, border: isDark ? "none" : "1px solid #e2e8f0", borderRadius: 4, color: TEXT_COLOR }}
           />
         </div>
         <div style={{ marginBottom: 18 }}>
-          <label style={{ display: "block", marginBottom: 6, color: "#cbd5e1" }}>Password</label>
+          <label style={{ display: "block", marginBottom: 6, color: isDark ? "#cbd5e1" : "#475569" }}>Password</label>
           <input
             type="password"
             name="password"
@@ -100,7 +114,7 @@ export default function DangNhap({ onBack, onRegister, onSuccess }) {
             onChange={handleChange}
             placeholder="Enter your password"
             required
-            style={{ width: "100%", padding: 12, background: "#334155", border: "none", borderRadius: 4, color: "white" }}
+            style={{ width: "100%", padding: 12, background: INPUT_BG, border: isDark ? "none" : "1px solid #e2e8f0", borderRadius: 4, color: TEXT_COLOR }}
           />
         </div>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 22 }}>
@@ -124,7 +138,7 @@ export default function DangNhap({ onBack, onRegister, onSuccess }) {
           {loading ? "Signing in..." : "Sign in"}
         </button>
         <div style={{ textAlign: "center", marginTop: 10 }}>
-          <span style={{ color: "#cbd5e1" }}>Don't have an account?</span>
+          <span style={{ color: isDark ? "#cbd5e1" : "#475569" }}>Don't have an account?</span>
           <span 
             style={{ color: "#3b82f6", fontWeight: "bold", marginLeft: 6, cursor: "pointer" }} 
             onClick={onRegister}
@@ -146,7 +160,7 @@ export default function DangNhap({ onBack, onRegister, onSuccess }) {
           <a href="#"><img src={imgDiscord} alt="Discord" style={{ width: 28, height: 28 }} /></a>
           <a href="#"><img src={imgTikTok} alt="TikTok" style={{ width: 28, height: 28 }} /></a>
         </div>
-        <div style={{ display: "flex", justifyContent: "center", gap: 40, flexWrap: "wrap", color: "#cbd5e1", fontSize: 14 }}>
+        <div style={{ display: "flex", justifyContent: "center", gap: 40, flexWrap: "wrap", color: isDark ? "#cbd5e1" : "#475569", fontSize: 14 }}>
           <span>Chính sách bảo mật</span>
           <span>Điều khoản sử dụng</span>
           <span>Giới thiệu</span>

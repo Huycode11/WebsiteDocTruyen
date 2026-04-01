@@ -11,64 +11,71 @@ const imgNguoiDung = "https://www.figma.com/api/mcp/asset/a33a2536-3008-4ac1-87a
 const imgCover = "https://www.figma.com/api/mcp/asset/166ab19c-ff41-465e-a693-ba9fe242d88b";
 const imgPlay = "https://www.figma.com/api/mcp/asset/d0bd3171-f31b-44a2-bf48-8fe2218d1537";
 
-export default function TimKiem({ onBackHome, onUserClick, onFavoritesClick }) {
+export default function TimKiem({ user, onBackHome, onUserClick, onUploadClick, onFavoritesClick, onNotificationClick, onHistoryClick, theme, onThemeToggle }) {
+  const isDark = theme === "dark";
+  const APP_BG = isDark ? "#131928" : "#dbeafe";
+  const TEXT_COLOR = isDark ? "white" : "#1e293b";
+  const NAV_BG = isDark ? "#131928" : "#e0e7ff";
+  const FOOTER_BG = isDark ? "#131928" : "#e0e7ff";
+
   return (
-    <div style={{ backgroundColor: "#131928", minHeight: "100vh", overflowX: "auto" }}>
-      <div style={{ position: "relative", width: "2805px", minHeight: "2644px", margin: "0 auto", backgroundColor: "#131928" }}>
-        <div style={{ position: "absolute", backgroundColor: "#131928", height: "124px", width: "2805px", left: 0, top: 0 }}>
+    <div style={{ backgroundColor: APP_BG, minHeight: "100vh", overflowX: "auto" }}>
+      <div style={{ position: "relative", width: "2805px", minHeight: "2644px", margin: "0 auto", backgroundColor: APP_BG }}>
+        <div style={{ position: "absolute", backgroundColor: NAV_BG, height: "124px", width: "2805px", left: 0, top: 0 }}>
           <button type="button" onClick={onBackHome} style={{ position: "absolute", left: "27px", top: "22px", width: "247px", height: "77px", border: "none", background: "transparent", padding: 0, cursor: "pointer" }}>
             <img alt="Fimory" src={imgLogo} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
           </button>
           <div style={{ position: "absolute", height: "76px", width: "76px", left: "377px", top: "23px" }}>
             <img alt="" src={imgOpenBook} style={{ width: "100%", height: "100%", objectFit: "contain" }} />
           </div>
-          <p style={{ position: "absolute", fontFamily: "Inter, sans-serif", fontSize: "30px", color: "white", left: "467px", top: "45px", whiteSpace: "nowrap" }}>Series</p>
-          <p style={{ position: "absolute", fontFamily: "Inter, sans-serif", fontSize: "30px", color: "white", left: "579px", top: "45px", whiteSpace: "nowrap" }}>Categories</p>
-          <p style={{ position: "absolute", fontFamily: "Inter, sans-serif", fontSize: "30px", color: "white", left: "765px", top: "45px", whiteSpace: "nowrap", cursor: "pointer" }} onClick={onFavoritesClick}>Favorites</p>
-          <p style={{ position: "absolute", fontFamily: "Inter, sans-serif", fontSize: "30px", color: "white", left: "927px", top: "45px", whiteSpace: "nowrap" }}>History</p>
-          <div style={{ position: "absolute", backgroundColor: "#b3a1ff", height: "71px", width: "1015px", left: "1059px", top: "20px", borderRadius: "12px" }}>
+          <p style={{ position: "absolute", fontFamily: "Inter, sans-serif", fontSize: "30px", color: TEXT_COLOR, left: "400px", top: "45px", whiteSpace: "nowrap" }}>Series</p>
+          <p style={{ position: "absolute", fontFamily: "Inter, sans-serif", fontSize: "30px", color: TEXT_COLOR, left: "530px", top: "45px", whiteSpace: "nowrap" }}>Categories</p>
+          <p style={{ position: "absolute", fontFamily: "Inter, sans-serif", fontSize: "30px", color: TEXT_COLOR, left: "730px", top: "45px", whiteSpace: "nowrap", cursor: "pointer" }} onClick={onFavoritesClick}>Favorites</p>
+          <p style={{ position: "absolute", fontFamily: "Inter, sans-serif", fontSize: "30px", color: TEXT_COLOR, left: "890px", top: "45px", whiteSpace: "nowrap", cursor: "pointer" }} onClick={onHistoryClick}>History</p>
+          {user && <p style={{ position: "absolute", fontFamily: "Inter, sans-serif", fontSize: "30px", color: TEXT_COLOR, left: "1030px", top: "45px", whiteSpace: "nowrap", cursor: "pointer" }} onClick={onUploadClick}>Upload</p>}
+          <div style={{ position: "absolute", backgroundColor: "#b3a1ff", height: "71px", width: "815px", left: "1259px", top: "20px", borderRadius: "12px" }}>
             <div style={{ position: "absolute", height: "64px", width: "64px", left: "17px", top: "4px" }}>
               <img alt="" src={imgSearch} style={{ width: "100%", height: "100%", objectFit: "contain" }} />
             </div>
             <p style={{ position: "absolute", fontFamily: "Inter, sans-serif", fontSize: "30px", color: "black", left: "110px", top: "18px", whiteSpace: "nowrap" }}>Tìm truyện ......</p>
           </div>
-          <div style={{ position: "absolute", height: "79px", width: "79px", left: "2109px", top: "21px" }}>
+          <div style={{ position: "absolute", height: "79px", width: "79px", left: "2109px", top: "21px", cursor: "pointer" }} onClick={onThemeToggle}>
             <img alt="" src={imgNutSangTi} style={{ width: "100%", height: "100%", objectFit: "contain" }} />
           </div>
-          <div style={{ position: "absolute", height: "83px", width: "86px", left: "2223px", top: "22px" }}>
+          <div onClick={onNotificationClick} style={{ position: "absolute", height: "83px", width: "86px", left: "2223px", top: "22px", cursor: "pointer" }}>
             <img alt="" src={imgThongBao} style={{ width: "100%", height: "100%", objectFit: "contain" }} />
           </div>
           <button type="button" onClick={onUserClick} style={{ position: "absolute", height: "86px", width: "93px", left: "2344px", top: "19px", border: "none", background: "transparent", padding: 0, cursor: "pointer" }}>
             <img alt="User" src={imgNguoiDung} style={{ width: "100%", height: "100%", objectFit: "contain" }} />
           </button>
-          <p style={{ position: "absolute", fontFamily: "Roboto, sans-serif", fontSize: "35px", color: "white", left: "2437px", top: "46px", whiteSpace: "nowrap" }}>User123@gmail.com</p>
+          <p style={{ position: "absolute", fontFamily: "Roboto, sans-serif", fontSize: "35px", color: TEXT_COLOR, left: "2437px", top: "46px", whiteSpace: "nowrap" }}>{user?.email || user?.username || "User123@gmail.com"}</p>
         </div>
 
-        <div style={{ position: "absolute", left: "692px", top: "288px", width: "1426px", height: "148px", border: "4px solid white", borderRadius: "16px", backgroundColor: "rgba(255,255,255,0.02)" }}>
+        <div style={{ position: "absolute", left: "692px", top: "288px", width: "1426px", height: "148px", border: `4px solid ${TEXT_COLOR}`, borderRadius: "16px", backgroundColor: isDark ? "rgba(255,255,255,0.02)" : "rgba(0,0,0,0.05)" }}>
           <div style={{ position: "absolute", left: "35px", top: "34px", width: "78px", height: "78px" }}>
             <img alt="" src={imgSearch} style={{ width: "100%", height: "100%", objectFit: "contain" }} />
           </div>
-          <p style={{ position: "absolute", left: "152px", top: "42px", margin: 0, fontFamily: "Roboto, sans-serif", fontSize: "56px", color: "white", whiteSpace: "nowrap" }}>Huyền giới chi môn</p>
+          <p style={{ position: "absolute", left: "152px", top: "42px", margin: 0, fontFamily: "Roboto, sans-serif", fontSize: "56px", color: TEXT_COLOR, whiteSpace: "nowrap" }}>Huyền giới chi môn</p>
         </div>
 
         <div style={{ position: "absolute", left: "984px", top: "592px", width: "835px", height: "900px", backgroundColor: "rgba(217,217,217,0.08)" }} />
         <div style={{ position: "absolute", left: "1050px", top: "650px", width: "705px", height: "640px" }}>
           <img alt="Huyền giới chi môn" src={imgCover} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
         </div>
-        <p style={{ position: "absolute", left: "1083px", top: "1322px", margin: 0, fontFamily: "Roboto, sans-serif", fontSize: "48px", fontWeight: "bold", color: "white", whiteSpace: "nowrap" }}>Huyền giới chi môn</p>
+        <p style={{ position: "absolute", left: "1083px", top: "1322px", margin: 0, fontFamily: "Roboto, sans-serif", fontSize: "48px", fontWeight: "bold", color: TEXT_COLOR, whiteSpace: "nowrap" }}>Huyền giới chi môn</p>
         <div style={{ position: "absolute", left: "1728px", top: "1318px", width: "88px", height: "88px" }}>
           <img alt="" src={imgPlay} style={{ width: "100%", height: "100%", objectFit: "contain" }} />
         </div>
 
-        <div style={{ position: "absolute", backgroundColor: "#131928", border: "6px solid #b3a1ff", height: "569px", width: "2805px", left: 0, top: "2075px" }}>
+        <div style={{ position: "absolute", backgroundColor: FOOTER_BG, border: "6px solid #b3a1ff", height: "569px", width: "2805px", left: 0, top: "2075px" }}>
           <div style={{ position: "absolute", height: "177px", width: "569px", left: "114px", top: "50px" }}>
             <img alt="Fimory" src={imgLogo} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
           </div>
-          <p style={{ position: "absolute", fontFamily: "Roboto, sans-serif", fontSize: "45px", color: "white", left: "144px", top: "291px", whiteSpace: "nowrap" }}>Chính sách bảo mật</p>
-          <p style={{ position: "absolute", fontFamily: "Roboto, sans-serif", fontSize: "45px", color: "white", left: "144px", top: "378px", whiteSpace: "nowrap" }}>Điều khoản sử dụng</p>
-          <p style={{ position: "absolute", fontFamily: "Roboto, sans-serif", fontSize: "45px", color: "white", left: "657px", top: "291px", whiteSpace: "nowrap" }}>Giới thiệu</p>
-          <p style={{ position: "absolute", fontFamily: "Roboto, sans-serif", fontSize: "45px", color: "white", left: "657px", top: "378px", whiteSpace: "nowrap" }}>Hỏi đáp</p>
-          <p style={{ position: "absolute", fontFamily: "Roboto, sans-serif", fontSize: "45px", color: "white", left: "977px", top: "291px", whiteSpace: "nowrap" }}>Liên hệ</p>
+          <p style={{ position: "absolute", fontFamily: "Roboto, sans-serif", fontSize: "45px", color: TEXT_COLOR, left: "144px", top: "291px", whiteSpace: "nowrap" }}>Chính sách bảo mật</p>
+          <p style={{ position: "absolute", fontFamily: "Roboto, sans-serif", fontSize: "45px", color: TEXT_COLOR, left: "144px", top: "378px", whiteSpace: "nowrap" }}>Điều khoản sử dụng</p>
+          <p style={{ position: "absolute", fontFamily: "Roboto, sans-serif", fontSize: "45px", color: TEXT_COLOR, left: "657px", top: "291px", whiteSpace: "nowrap" }}>Giới thiệu</p>
+          <p style={{ position: "absolute", fontFamily: "Roboto, sans-serif", fontSize: "45px", color: TEXT_COLOR, left: "657px", top: "378px", whiteSpace: "nowrap" }}>Hỏi đáp</p>
+          <p style={{ position: "absolute", fontFamily: "Roboto, sans-serif", fontSize: "45px", color: TEXT_COLOR, left: "977px", top: "291px", whiteSpace: "nowrap" }}>Liên hệ</p>
           <div style={{ position: "absolute", height: "113px", width: "138px", left: "846px", top: "82px" }}>
             <img alt="Facebook" src={imgFacebook} style={{ width: "100%", height: "100%", objectFit: "contain" }} />
           </div>

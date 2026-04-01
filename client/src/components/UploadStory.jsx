@@ -7,11 +7,13 @@ const imgTikTok = "https://www.figma.com/api/mcp/asset/18138309-e035-4154-ad53-e
 const imgDiscord = "https://www.figma.com/api/mcp/asset/cfc86f8e-c8fe-4528-a9cd-d994e7e6dd3a";
 const imgSearch = "https://www.figma.com/api/mcp/asset/26f4d014a151b3b1df0756444673702bba26995f";
 const imgOpenBook = "https://www.figma.com/api/mcp/asset/7f4dff1657f5199a7083843042c9f2c8a51d7c2c";
-const imgThemeToggle = "https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/0d81d053-a182-45aa-b78d-154e37e077f2";
+const imgThemeToggle = "https://www.figma.com/api/mcp/asset/46247a4e-68a5-4cee-8ff5-5379e6a32174";
 const imgNotification = "https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/a6192694-ab37-479a-b1ca-bb67f1ee139f";
 const imgUser = "https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/e3e5fe7f-7f63-442b-9600-752edc47fac9";
 
-export default function UploadStory({ onHomeClick, onFavoritesClick, onUserClick }) {
+export default function UploadStory({ user, onHomeClick, onUploadClick, onFavoritesClick, onUserClick, onNotificationClick, onHistoryClick, theme, onThemeToggle }) {
+  const isDark = theme === "dark";
+
   const [formData, setFormData] = useState({
     title: "",
     author: "",
@@ -23,14 +25,14 @@ export default function UploadStory({ onHomeClick, onFavoritesClick, onUserClick
   const [message, setMessage] = useState("");
 
   // Colors from Figma
-  const BG_PAGE = "#20212D";         // overall page background
-  const BG_NAVBAR = "#131928";       // navbar background
-  const BG_FORM = "#2B3363";        // form panel (approx from figma #454D60 lighter)
-  const BG_INPUT = "#454D60";        // input boxes
-  const BG_FOOTER = "#131928";
-  const ACCENT_PURPLE = "#B3A1FF";   // border/accent color
-  const TEXT_WHITE = "#FFFFFF";
-  const TEXT_MUTED = "rgba(255,255,255,0.4)";
+  const BG_PAGE = isDark ? "#20212D" : "#dbeafe";
+  const BG_NAVBAR = isDark ? "#131928" : "#e0e7ff";
+  const BG_FORM = isDark ? "#1E2535" : "white";
+  const BG_INPUT = isDark ? "#454D60" : "#f1f5f9";
+  const BG_FOOTER = isDark ? "#131928" : "#e0e7ff";
+  const ACCENT_PURPLE = "#B3A1FF";
+  const TEXT_WHITE = isDark ? "#FFFFFF" : "#1e293b";
+  const TEXT_MUTED = isDark ? "rgba(255,255,255,0.4)" : "rgba(0,0,0,0.4)";
 
   const handleCategoryChange = (cat) => {
     setFormData(prev => ({
@@ -92,9 +94,9 @@ export default function UploadStory({ onHomeClick, onFavoritesClick, onUserClick
             <img src={imgOpenBook} alt="Series" style={{ width: 55, height: 55 }} />
             <span style={{ fontSize: 22, color: TEXT_WHITE }}>Series</span>
           </div>
-          <span style={{ fontSize: 22, color: TEXT_WHITE, cursor: "pointer" }}>Categories</span>
           <span style={{ fontSize: 22, color: TEXT_WHITE, cursor: "pointer" }} onClick={onFavoritesClick}>Favorites</span>
-          <span style={{ fontSize: 22, color: TEXT_WHITE, cursor: "pointer" }}>History</span>
+          <span style={{ fontSize: 22, color: TEXT_WHITE, cursor: "pointer" }} onClick={onHistoryClick}>History</span>
+          {user && <span style={{ fontSize: 22, color: TEXT_WHITE, cursor: "pointer" }} onClick={onUploadClick}>Upload</span>}
         </div>
 
         {/* Right: Search + icons */}
@@ -115,11 +117,16 @@ export default function UploadStory({ onHomeClick, onFavoritesClick, onUserClick
               style={{ background: "transparent", border: "none", outline: "none", color: "#1a1a2e", fontWeight: 600, fontSize: 20, width: "100%" }}
             />
           </div>
-          <img src={imgThemeToggle} alt="Sáng/Tối" style={{ width: 48, height: 48, cursor: "pointer" }} />
-          <img src={imgNotification} alt="Thông báo" style={{ width: 48, height: 48, cursor: "pointer" }} />
+          <img src={imgThemeToggle} alt="Sáng/Tối" style={{ width: 48, height: 48, cursor: "pointer" }} onClick={onThemeToggle} />
+          <img 
+            src={imgNotification} 
+            alt="Thông báo" 
+            style={{ width: 48, height: 48, cursor: "pointer" }} 
+            onClick={onNotificationClick}
+          />
           <div style={{ display: "flex", alignItems: "center", gap: 8, cursor: "pointer" }} onClick={onUserClick}>
             <img src={imgUser} alt="Người dùng" style={{ width: 48, height: 48 }} />
-            <span style={{ fontSize: 20 }}>User123@gmail.com</span>
+            <span style={{ fontSize: 20 }}>{user?.email || user?.username || "User123@gmail.com"}</span>
           </div>
         </div>
       </nav>
@@ -128,11 +135,12 @@ export default function UploadStory({ onHomeClick, onFavoritesClick, onUserClick
       <main style={{ flex: 1, padding: "50px 60px 200px 60px" }}>
         {/* Form panel */}
         <div style={{
-          background: "#1E2535",
+          background: BG_FORM,
           borderRadius: 12,
           padding: "50px 60px",
           maxWidth: 1400,
           margin: "0 auto",
+          boxShadow: isDark ? "none" : "0 4px 20px rgba(0,0,0,0.05)",
         }}>
           {/* Title row */}
           <div style={{ display: "flex", alignItems: "center", gap: 20, marginBottom: 48 }}>
@@ -201,12 +209,12 @@ export default function UploadStory({ onHomeClick, onFavoritesClick, onUserClick
                     <div
                       onClick={() => handleCategoryChange(cat)}
                       style={{
-                        width: 26, height: 26, borderRadius: 4, border: "2px solid #fff",
+                        width: 26, height: 26, borderRadius: 4, border: `2px solid ${TEXT_WHITE}`,
                         background: formData.categories.includes(cat) ? "#818cf8" : "transparent",
                         cursor: "pointer", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center"
                       }}
                     >
-                      {formData.categories.includes(cat) && <span style={{ fontSize: 14 }}>✓</span>}
+                      {formData.categories.includes(cat) && <span style={{ fontSize: 14, color: "white" }}>✓</span>}
                     </div>
                     <span>{cat}</span>
                   </label>
@@ -285,7 +293,7 @@ export default function UploadStory({ onHomeClick, onFavoritesClick, onUserClick
           <a href="#"><img src={imgDiscord} alt="Discord" style={{ width: 50, height: 50 }} /></a>
           <a href="#"><img src={imgTikTok} alt="TikTok" style={{ width: 50, height: 50 }} /></a>
         </div>
-        <div style={{ display: "flex", gap: 50, flexWrap: "wrap", justifyContent: "center", color: "#cbd5e1", fontSize: 18, fontWeight: 700 }}>
+        <div style={{ display: "flex", gap: 50, flexWrap: "wrap", justifyContent: "center", color: isDark ? "#cbd5e1" : "#475569", fontSize: 18, fontWeight: 700 }}>
           <span style={{ cursor: "pointer" }}>Chính sách bảo mật</span>
           <span style={{ cursor: "pointer" }}>Điều khoản sử dụng</span>
           <span style={{ cursor: "pointer" }}>Giới thiệu</span>

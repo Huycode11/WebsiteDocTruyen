@@ -9,6 +9,7 @@ const imgDiscord = "https://www.figma.com/api/mcp/asset/cfc86f8e-c8fe-4528-a9cd-
 const imgOpenBook = "https://www.figma.com/api/mcp/asset/5437a700-29ed-44a9-9d06-4fa236756d90";
 const imgSearch = "https://www.figma.com/api/mcp/asset/8376f474-7699-43d0-af0d-35f111fa8d31";
 const imgUser = "https://www.figma.com/api/mcp/asset/a33a2536-3008-4ac1-87af-011fd3bb59d1";
+const imgThemeToggle = "https://www.figma.com/api/mcp/asset/46247a4e-68a5-4cee-8ff5-5379e6a32174";
 
 function StarRating({ value, onChange, size = 32 }) {
   const stars = [];
@@ -31,7 +32,8 @@ function StarRating({ value, onChange, size = 32 }) {
   return <div style={{ display: "flex" }}>{stars}</div>;
 }
 
-export default function CommentsRatingPage({ onBack }) {
+export default function CommentsRatingPage({ user, onBack, onHistoryClick, onUploadClick, theme, onThemeToggle }) {
+  const isDark = theme === "dark";
   const [reviews, setReviews] = useState([]);
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
@@ -64,13 +66,14 @@ export default function CommentsRatingPage({ onBack }) {
     setTimeout(() => setMessage(""), 3000);
   };
 
-  const APP_BG = "#0f172a";
-  const NAV_BG = "#131928";
-  const BOX_BG = "#1e1b4b"; // Dark purple/indigo
+  const APP_BG = isDark ? "#0f172a" : "#dbeafe";
+  const NAV_BG = isDark ? "#131928" : "#e0e7ff";
+  const BOX_BG = isDark ? "#1e1b4b" : "white"; // Dark purple/indigo or white
+  const TEXT_COLOR = isDark ? "white" : "#1e293b";
   const ACCENT_PURPLE = "#b3a1ff";
 
   return (
-    <div style={{ backgroundColor: APP_BG, minHeight: "100vh", color: "white", fontFamily: "Inter, sans-serif" }}>
+    <div style={{ backgroundColor: APP_BG, minHeight: "100vh", color: TEXT_COLOR, fontFamily: "Inter, sans-serif" }}>
       
       {/* ── NAVBAR ── */}
       <nav style={{
@@ -89,9 +92,10 @@ export default function CommentsRatingPage({ onBack }) {
                <img src={imgOpenBook} alt="Series" style={{ height: 20 }} />
                <span>Series</span>
              </div>
-             <span style={{ cursor: "pointer" }}>Categories</span>
-             <span style={{ cursor: "pointer" }}>Favorites</span>
-             <span style={{ cursor: "pointer" }}>History</span>
+              <span style={{ cursor: "pointer", color: TEXT_COLOR }}>Categories</span>
+              <span style={{ cursor: "pointer", color: TEXT_COLOR }}>Favorites</span>
+              <span style={{ cursor: "pointer", color: TEXT_COLOR }} onClick={onHistoryClick}>History</span>
+              {user && <span style={{ cursor: "pointer", color: TEXT_COLOR }} onClick={onUploadClick}>Upload</span>}
           </div>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: "1.5rem" }}>
@@ -99,12 +103,12 @@ export default function CommentsRatingPage({ onBack }) {
             <img src={imgSearch} alt="search" style={{ height: 24 }} />
             <input type="text" placeholder="Tìm truyện ......" style={{ background: "transparent", border: "none", outline: "none", color: "#131928", fontWeight: 600, width: "100%" }} />
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
-            <span style={{ fontSize: 24, cursor: "pointer" }}>☼</span>
-            <span style={{ fontSize: 24, cursor: "pointer" }}>🔔</span>
-            <div style={{ display: "flex", alignItems: "center", gap: 8, cursor: "pointer" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "1.5rem" }}>
+            <img src={imgThemeToggle} alt="theme" style={{ height: 24, cursor: "pointer" }} onClick={onThemeToggle} />
+            <span style={{ fontSize: 24, cursor: "pointer", color: TEXT_COLOR }}>🔔</span>
+            <div style={{ display: "flex", alignItems: "center", gap: 8, cursor: "pointer", color: TEXT_COLOR }}>
               <img src={imgUser} alt="user" style={{ height: 32 }} />
-              <span style={{ fontSize: 14 }}>User123@gmail.com</span>
+              <span style={{ fontSize: 14 }}>{user?.email || user?.username || "User123@gmail.com"}</span>
             </div>
           </div>
         </div>
@@ -116,17 +120,12 @@ export default function CommentsRatingPage({ onBack }) {
         <div style={{ display: "flex", flexDirection: "column", gap: 30 }}>
           <img src={imgCover} alt="Cover" style={{ width: "100%", borderRadius: 4, height: "auto" }} />
           
-          <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 12, cursor: "pointer" }}>
-                <span style={{ color: "#3b82f6", fontSize: 40 }}>▶</span>
-                <span style={{ fontSize: 20, fontWeight: "bold" }}>Đọc chương mới nhất</span>
+            <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 12, cursor: "pointer" }}>
+                  <span style={{ color: "#3b82f6", fontSize: 40 }}>▶</span>
+                  <span style={{ fontSize: 20, fontWeight: "bold" }}>Đọc chương mới nhất</span>
+              </div>
             </div>
-
-            <div style={{ display: "flex", alignItems: "center", gap: 12, cursor: "pointer" }}>
-                <span style={{ color: "#3b82f6", fontSize: 40 }}>💙</span>
-                <span style={{ fontSize: 20, fontWeight: "bold" }}>Theo dõi/ Yêu thích</span>
-            </div>
-          </div>
         </div>
 
         {/* Center: Story Info */}
@@ -141,7 +140,7 @@ export default function CommentsRatingPage({ onBack }) {
 
           <section>
             <h2 style={{ fontSize: 20, fontWeight: "bold", marginBottom: 15 }}>GIỚI THIỆU</h2>
-            <div style={{ background: BOX_BG, padding: "20px", borderRadius: 4, fontSize: 16, lineHeight: "1.6", color: "#ccc" }}>
+            <div style={{ background: BOX_BG, padding: "20px", borderRadius: 4, fontSize: 16, lineHeight: "1.6", color: isDark ? "#ccc" : "#475569", border: isDark ? "none" : "1px solid #e2e8f0" }}>
               Nữ chính xuất hiện trong một lần tai nạn xe bị sinh vật bí ẩn ......
             </div>
           </section>
@@ -158,7 +157,7 @@ export default function CommentsRatingPage({ onBack }) {
         {/* Right: Comments Panel */}
         <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
           <h2 style={{ fontSize: 24, fontWeight: "bold", margin: "0 0 10px 0", textAlign: "center" }}>BÌNH LUẬN</h2>
-          <div style={{ background: BOX_BG, borderRadius: 4, padding: "20px", minHeight: 400, display: "flex", flexDirection: "column", gap: 20 }}>
+          <div style={{ background: BOX_BG, borderRadius: 4, padding: "20px", minHeight: 400, display: "flex", flexDirection: "column", gap: 20, border: isDark ? "none" : "1px solid #e2e8f0" }}>
             <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
                <div style={{ display: "flex", gap: 15, alignItems: "center" }}>
                    <div style={{ width: 44, height: 44, background: "#475569", borderRadius: "50%", display: "flex", justifyContent: "center", alignItems: "center" }}>
@@ -175,7 +174,7 @@ export default function CommentsRatingPage({ onBack }) {
                   value={comment}
                   onChange={(e) => setComment(e.target.value)}
                   placeholder="Để lại bình luận..."
-                  style={{ width: "100%", background: "#334155", border: "none", borderRadius: 4, padding: 10, color: "white", outline: "none", resize: "none" }}
+                  style={{ width: "100%", background: isDark ? "#334155" : "#f1f5f9", border: "none", borderRadius: 4, padding: 10, color: TEXT_COLOR, outline: "none", resize: "none" }}
                />
                <button type="submit" style={{ background: ACCENT_PURPLE, border: "none", borderRadius: 4, padding: "8px", fontWeight: "bold", cursor: "pointer", color: "#131928" }}>Gửi</button>
             </form>
@@ -194,16 +193,16 @@ export default function CommentsRatingPage({ onBack }) {
                     </div>
                     <span style={{ fontSize: 20, fontWeight: "bold", color: "#818cf8" }}>Fimory</span>
                   </div>
-                  <div style={{ display: "flex", flexDirection: "column", gap: 8, fontSize: 16 }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: 8, fontSize: 16, color: TEXT_COLOR }}>
                     <span style={{ cursor: "pointer" }}>Chính sách bảo mật</span>
                     <span style={{ cursor: "pointer" }}>Điều khoản sử dụng</span>
                   </div>
                </div>
-               <div style={{ display: "flex", flexDirection: "column", gap: 15, fontSize: 16, paddingTop: 6 }}>
+               <div style={{ display: "flex", flexDirection: "column", gap: 15, fontSize: 16, paddingTop: 6, color: TEXT_COLOR }}>
                   <span style={{ cursor: "pointer", fontWeight: "bold" }}>Giới thiệu</span>
                   <span style={{ cursor: "pointer", fontWeight: "bold" }}>Hỏi đáp</span>
                </div>
-               <div style={{ display: "flex", flexDirection: "column", gap: 12, fontSize: 16, paddingTop: 6 }}>
+               <div style={{ display: "flex", flexDirection: "column", gap: 12, fontSize: 16, paddingTop: 6, color: TEXT_COLOR }}>
                   <span style={{ cursor: "pointer", fontWeight: "bold" }}>Liên hệ</span>
                </div>
             </div>

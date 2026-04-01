@@ -10,7 +10,7 @@ const imgOpenBook = "https://www.figma.com/api/mcp/asset/5437a700-29ed-44a9-9d06
 const imgThemeToggle = "https://www.figma.com/api/mcp/asset/46247a4e-68a5-4cee-8ff5-5379e6a32174";
 const imgNotification = "https://www.figma.com/api/mcp/asset/9dbaced7-0b92-475e-8a8d-7061ac0f354a";
 const imgUser = "https://www.figma.com/api/mcp/asset/a33a2536-3008-4ac1-87af-011fd3bb59d1";
-const imgCoverDefault = "https://www.figma.com/api/mcp/asset/be4a6751-ce0e-487b-8a43-b93a863b6b27";
+const imgCoverDefault = "https://www.figma.com/api/mcp/asset/166ab19c-ff41-465e-a693-ba9fe242d88b";
 
 const chapters = [
   { id: 1, title: "Chương 1: Gặp gỡ bí ẩn", time: "1 tháng trước" },
@@ -21,13 +21,13 @@ const chapters = [
   { id: 6, title: "Chương 6: Kết thúc hay bắt đầu", time: "1 tháng trước" },
 ];
 
-export default function ChiTietTruyen({ user, onHomeClick, onFavoritesClick, onCategoriesClick, onHistoryClick, onUserClick, onNotificationClick, onRatingClick, onChapterClick, theme, onThemeToggle }) {
+export default function DanhSachChuong({ user, onHomeClick, onFavoritesClick, onHistoryClick, onUserClick, onNotificationClick, onChapterClick, theme, onThemeToggle }) {
   const isDark = theme === "dark";
   const BG_COLOR = isDark ? "#0f172a" : "#f1f5f9";
   const NAV_BG = isDark ? "#131928" : "#e0e7ff";
   const TEXT_COLOR = isDark ? "white" : "#1e293b";
+  const CARD_BG = isDark ? "#1e293b" : "white";
   const ROW_BG = isDark ? "#131928" : "#f8fafc";
-  const ACCENT_PURPLE = "#b3a1ff";
 
   return (
     <div style={{ backgroundColor: BG_COLOR, color: TEXT_COLOR, minHeight: "100vh", fontFamily: "Inter, sans-serif", display: "flex", flexDirection: "column" }}>
@@ -42,14 +42,14 @@ export default function ChiTietTruyen({ user, onHomeClick, onFavoritesClick, onC
               <img src={imgOpenBook} alt="Series" style={{ height: "20px" }} />
               <span>Series</span>
             </div>
-            <span style={{ cursor: "pointer" }} onClick={onCategoriesClick}>Categories</span>
+            <span style={{ cursor: "pointer" }}>Categories</span>
             <span style={{ cursor: "pointer" }} onClick={onFavoritesClick}>Favorites</span>
             <span style={{ cursor: "pointer" }} onClick={onHistoryClick}>History</span>
             {user && <span style={{ cursor: "pointer" }}>Upload</span>}
           </div>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: "1.2rem" }}>
-          <div style={{ background: ACCENT_PURPLE, borderRadius: 8, display: "flex", alignItems: "center", padding: "0.4rem 1rem", gap: 10, width: 300 }}>
+          <div style={{ background: "#a594f9", borderRadius: 8, display: "flex", alignItems: "center", padding: "0.4rem 1rem", gap: 10, width: 300 }}>
             <img src={imgSearch} alt="Search" style={{ height: "18px" }} />
             <span style={{ color: "black", opacity: 0.6, fontSize: "14px" }}>Tìm truyện ......</span>
           </div>
@@ -77,33 +77,6 @@ export default function ChiTietTruyen({ user, onHomeClick, onFavoritesClick, onC
               <span style={{ fontSize: "40px" }}>💙</span>
               <span style={{ fontSize: "20px", fontWeight: "bold", color: TEXT_COLOR }}>Theo dõi/ Yêu thích</span>
             </div>
-            {/* Added Rating Button here */}
-             <button
-              onClick={onRatingClick}
-              style={{
-                marginTop: "1rem",
-                padding: "16px 20px",
-                backgroundColor: ACCENT_PURPLE,
-                color: "#131928",
-                border: "none",
-                borderRadius: 12,
-                fontSize: "18px",
-                fontWeight: "bold",
-                cursor: "pointer",
-                transition: "transform 0.2s, background-color 0.2s",
-                boxShadow: "0 4px 15px rgba(179, 161, 255, 0.4)"
-              }}
-              onMouseEnter={e => {
-                e.currentTarget.style.backgroundColor = "#c4b5ff";
-                e.currentTarget.style.transform = "scale(1.05)";
-              }}
-              onMouseLeave={e => {
-                e.currentTarget.style.backgroundColor = ACCENT_PURPLE;
-                e.currentTarget.style.transform = "scale(1)";
-              }}
-            >
-              Đánh giá truyện
-            </button>
           </div>
         </aside>
 
@@ -114,6 +87,7 @@ export default function ChiTietTruyen({ user, onHomeClick, onFavoritesClick, onC
               <h1 style={{ fontSize: "32px", fontWeight: "bold", margin: 0 }}>Đại Tượng Vô Hình</h1>
               <p style={{ fontSize: "20px", fontWeight: 500, marginTop: "1rem" }}>Danh sách chương: 100 Chap....</p>
             </div>
+            {/* Sort Dropdown mock */}
             <div style={{ border: "1px solid #475569", padding: "0.5rem 1rem", borderRadius: "8px", fontSize: "18px", fontWeight: "bold", display: "flex", alignItems: "center", gap: "10px", cursor: "pointer" }}>
               Mới cập nhật <span>▼</span>
             </div>
@@ -167,7 +141,7 @@ export default function ChiTietTruyen({ user, onHomeClick, onFavoritesClick, onC
               <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem", fontSize: "15px", fontWeight: "500" }}>
                 <span style={{ cursor: "pointer" }}>Chính sách bảo mật</span>
                 <span style={{ cursor: "pointer" }}>Điều khoản sử dụng</span>
-                <span style={{ cursor: "pointer" }}>Liên hệ</span>
+                <span style={{ cursor: "pointer" }}>Liện hệ</span>
               </div>
               <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem", fontSize: "15px", fontWeight: "500" }}>
                 <span style={{ cursor: "pointer" }}>Giới thiệu</span>

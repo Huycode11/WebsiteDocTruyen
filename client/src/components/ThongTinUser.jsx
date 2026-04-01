@@ -10,12 +10,12 @@ const imgTelegram = "https://www.figma.com/api/mcp/asset/919f5117-4fc0-484d-9e71
 const imgTikTok = "https://www.figma.com/api/mcp/asset/18138309-e035-4154-ad53-e3e719aa19ca";
 const imgDiscord = "https://www.figma.com/api/mcp/asset/cfc86f8e-c8fe-4528-a9cd-d994e7e6dd3a";
 
-const pageStyle = {
+const getPageStyle = (isDark) => ({
   minHeight: "100vh",
-  backgroundColor: "#131928",
-  color: "#ffffff",
+  backgroundColor: isDark ? "#131928" : "#dbeafe",
+  color: isDark ? "#ffffff" : "#1e293b",
   fontFamily: "Inter, Arial, sans-serif",
-};
+});
 
 const labelStyle = {
   fontSize: "1.9rem",
@@ -24,24 +24,25 @@ const labelStyle = {
   display: "block",
 };
 
-const boxStyle = {
+const getBoxStyle = (isDark) => ({
   width: "100%",
   height: 82,
   borderRadius: 18,
-  border: "3px solid #ffffff",
+  border: isDark ? "3px solid #ffffff" : "3px solid #1e293b",
   backgroundColor: "transparent",
-  color: "#ffffff",
+  color: isDark ? "#ffffff" : "#1e293b",
   fontSize: "1.45rem",
   padding: "0 24px",
   boxSizing: "border-box",
   outline: "none",
-};
+});
 
-function NavItem({ icon, text }) {
+function NavItem({ icon, text, onClick, theme }) {
+  const isDark = theme === "dark";
   return (
-    <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-      {icon ? <img src={icon} alt="" style={{ width: 38, height: 38, objectFit: "contain" }} /> : null}
-      <span style={{ fontSize: 28, whiteSpace: "nowrap" }}>{text}</span>
+    <div style={{ display: "flex", alignItems: "center", gap: 14, cursor: onClick ? "pointer" : "default" }} onClick={onClick}>
+      {icon ? <img src={icon} alt="" style={{ width: 38, height: 38, objectFit: "contain", filter: isDark ? "none" : "invert(0.2)" }} /> : null}
+      <span style={{ fontSize: 28, whiteSpace: "nowrap", color: isDark ? "white" : "#1e293b" }}>{text}</span>
     </div>
   );
 }
@@ -50,7 +51,13 @@ function FooterLink({ children }) {
   return <span style={{ fontSize: 30, lineHeight: 1.35 }}>{children}</span>;
 }
 
-export default function ThongTinUser({ user, onBack }) {
+export default function ThongTinUser({ user, onBack, onHistoryClick, onUploadClick, theme, onThemeToggle }) {
+  const isDark = theme === "dark";
+  const TEXT_COLOR = isDark ? "#ffffff" : "#1e293b";
+  const NAV_BG = isDark ? "#131928" : "#e0e7ff";
+  const pageStyle = getPageStyle(isDark);
+  const boxStyle = getBoxStyle(isDark);
+
   const [formData, setFormData] = useState({
     email: user?.email || "Chưa cập nhật",
     username: user?.username || "Guest",
@@ -83,10 +90,11 @@ export default function ThongTinUser({ user, onBack }) {
           <img src={imgLogo} alt="Fimory" style={{ width: 190, height: 60, objectFit: "contain", marginRight: 34 }} />
 
           <div style={{ display: "flex", alignItems: "center", gap: 28, flex: 1 }}>
-            <NavItem icon={imgBook} text="Series" />
-            <NavItem text="Categories" />
-            <NavItem text="Favorites" />
-            <NavItem text="History" />
+            <NavItem icon={imgBook} text="Series" theme={theme} />
+            <NavItem text="Categories" theme={theme} />
+            <NavItem text="Favorites" theme={theme} />
+            <NavItem text="History" onClick={onHistoryClick} theme={theme} />
+            {user && <NavItem text="Upload" onClick={onUploadClick} theme={theme} />}
           </div>
 
           <div
@@ -108,6 +116,27 @@ export default function ThongTinUser({ user, onBack }) {
             <span style={{ fontSize: 24 }}>Tim truyen ......</span>
           </div>
 
+          <div 
+            onClick={onThemeToggle}
+            style={{ 
+              marginRight: 20, 
+              cursor: "pointer", 
+              width: 54, 
+              height: 54, 
+              display: "flex", 
+              alignItems: "center", 
+              justifyContent: "center",
+              background: isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.05)",
+              borderRadius: "50%"
+            }}
+          >
+            <img 
+              src="https://www.figma.com/api/mcp/asset/46247a4e-68a5-4cee-8ff5-5379e6a32174" 
+              alt="Theme" 
+              style={{ width: 32, height: 32 }} 
+            />
+          </div>
+
           <button
             type="button"
             onClick={onBack}
@@ -119,9 +148,15 @@ export default function ThongTinUser({ user, onBack }) {
               cursor: "pointer",
             }}
           >
-            <img src={imgUser} alt="User" style={{ width: 54, height: 54, objectFit: "contain" }} />
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <img
+                src={imgUser}
+                alt="Account"
+                style={{ width: 44, height: 44, borderRadius: "50%", marginRight: 10 }}
+              />
+              <span style={{ fontSize: 24, paddingRight: 4 }}>{user?.email || user?.username || "Guest"}</span>
+            </div>
           </button>
-          <span style={{ fontSize: 28, whiteSpace: "nowrap" }}>{formData.email}</span>
         </header>
 
         <main
@@ -172,7 +207,7 @@ export default function ThongTinUser({ user, onBack }) {
                       width: 46,
                       height: 46,
                       borderRadius: "50%",
-                      border: "3px solid #ffffff",
+                      border: isDark ? "3px solid #ffffff" : "3px solid #1e293b",
                       display: "grid",
                       placeItems: "center",
                       fontSize: 18,
@@ -202,9 +237,9 @@ export default function ThongTinUser({ user, onBack }) {
                         width: 34,
                         height: 34,
                         borderRadius: "50%",
-                        border: "3px solid #ffffff",
-                        backgroundColor: formData.gender === "male" ? "#ffffff" : "transparent",
-                        boxShadow: formData.gender === "male" ? "inset 0 0 0 7px #131928" : "none",
+                        border: isDark ? "3px solid #ffffff" : "3px solid #1e293b",
+                        backgroundColor: formData.gender === "male" ? TEXT_COLOR : "transparent",
+                        boxShadow: formData.gender === "male" ? `inset 0 0 0 7px ${isDark ? "#131928" : "#dbeafe"}` : "none",
                       }}
                     />
                     <input
@@ -224,9 +259,9 @@ export default function ThongTinUser({ user, onBack }) {
                         width: 34,
                         height: 34,
                         borderRadius: "50%",
-                        border: "3px solid #ffffff",
-                        backgroundColor: formData.gender === "female" ? "#ffffff" : "transparent",
-                        boxShadow: formData.gender === "female" ? "inset 0 0 0 7px #131928" : "none",
+                        border: isDark ? "3px solid #ffffff" : "3px solid #1e293b",
+                        backgroundColor: formData.gender === "female" ? TEXT_COLOR : "transparent",
+                        boxShadow: formData.gender === "female" ? `inset 0 0 0 7px ${isDark ? "#131928" : "#dbeafe"}` : "none",
                       }}
                     />
                     <input
@@ -262,7 +297,7 @@ export default function ThongTinUser({ user, onBack }) {
                       width: 46,
                       height: 46,
                       borderRadius: 10,
-                      border: "3px solid #ffffff",
+                      border: isDark ? "3px solid #ffffff" : "3px solid #1e293b",
                       display: "grid",
                       placeItems: "center",
                       fontSize: 18,
@@ -295,7 +330,7 @@ export default function ThongTinUser({ user, onBack }) {
                       width: 160,
                       height: 120,
                       borderRadius: 18,
-                      border: "3px solid #ffffff",
+                      border: isDark ? "3px solid #ffffff" : "3px solid #1e293b",
                       display: "grid",
                       placeItems: "center",
                       fontSize: 56,
@@ -313,9 +348,9 @@ export default function ThongTinUser({ user, onBack }) {
                   maxWidth: 760,
                   height: 82,
                   borderRadius: 18,
-                  border: "3px solid #ffffff",
+                  border: isDark ? "3px solid #ffffff" : "3px solid #1e293b",
                   backgroundColor: "transparent",
-                  color: "#ffffff",
+                  color: TEXT_COLOR,
                   fontSize: 30,
                   fontWeight: 700,
                   cursor: "pointer",
@@ -344,7 +379,7 @@ export default function ThongTinUser({ user, onBack }) {
               </div>
             </div>
 
-            <div style={{ display: "grid", gap: 10 }}>
+            <div style={{ display: "grid", gap: 10, color: isDark ? "#cbd5e1" : "#475569" }}>
               <FooterLink>Gioi thieu</FooterLink>
               <FooterLink>Hoi dap</FooterLink>
               <FooterLink>Lien he</FooterLink>

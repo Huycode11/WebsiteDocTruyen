@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 const imgImage2 = "https://www.figma.com/api/mcp/asset/be4a6751-ce0e-487b-8a43-b93a863b6b27";
 const imgImage3 = "https://www.figma.com/api/mcp/asset/d355aaac-0094-4386-aebd-130c6aa161db";
@@ -17,16 +17,14 @@ const imgThongBao = "https://www.figma.com/api/mcp/asset/9dbaced7-0b92-475e-8a8d
 const imgNgiDung = "https://www.figma.com/api/mcp/asset/a33a2536-3008-4ac1-87af-011fd3bb59d1";
 const imgImage4 = "https://www.figma.com/api/mcp/asset/166ab19c-ff41-465e-a693-ba9fe242d88b";
 
-const stories = [
-  { id: 1, title: "Chàng trai năm ấy", img: imgImage2, hd: true },
-  { id: 2, title: "Võ thượng thần đế", img: imgImage3, hd: true },
-  { id: 3, title: "Thôn phệ tinh khôn", img: imgImage4, hd: true },
-  { id: 4, title: "Vũ độn càn khôn", img: imgImage5, hd: true },
-  { id: 5, title: "Song sinh võ hồn", img: imgImage6, hd: true },
-  { id: 6, title: "Huyền giới chi môn", img: imgImage7, hd: true },
-];
+export default function PhamDucHuyTrangChu({ user, stories = [], favorites = [], onUserClick, onSearchClick, onCategoriesClick, onLoginClick, onLogout, onUploadClick, onFavoritesClick, onStoryClick, onNotificationClick, onHistoryClick, theme, onThemeToggle }) {
+  const isDark = theme === "dark";
+  const APP_BG = isDark ? "#0f172a" : "#dbeafe";
+  const NAV_BG = isDark ? "#131928" : "#e0e7ff";
+  const TEXT_COLOR = isDark ? "white" : "#1e293b";
+  const CARD_TEXT_BG = isDark ? "#131928" : "white";
+  const FOOTER_BG = isDark ? "#131928" : "#e0e7ff";
 
-export default function PhamDucHuyTrangChu({ user, onUserClick, onSearchClick, onLoginClick, onLogout, onUploadClick, onStoryClick }) {
   const handleUserIconClick = () => {
     if (user) {
       onUserClick();
@@ -37,35 +35,33 @@ export default function PhamDucHuyTrangChu({ user, onUserClick, onSearchClick, o
   };
 
   return (
-    <div style={{ backgroundColor: "#0f172a", minHeight: "100vh", color: "white", fontFamily: "Inter, sans-serif" }}>
-      {/* Navbar ... (rest of navbar) */}
+    <div style={{ backgroundColor: APP_BG, minHeight: "100vh", color: TEXT_COLOR, fontFamily: "Inter, sans-serif" }}>
       <nav style={{
         display: "flex",
         alignItems: "center",
         padding: "1rem 2rem",
-        backgroundColor: "#131928",
+        backgroundColor: NAV_BG,
         position: "sticky",
         top: 0,
         zIndex: 50,
         boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
         justifyContent: "space-between"
       }}>
-        {/* Left: Logo & Menu */}
         <div style={{ display: "flex", alignItems: "center", gap: "2rem" }}>
           <img src={imgImage1} alt="Logo" style={{ height: "45px", cursor: "pointer" }} />
 
-          <div style={{ display: "flex", gap: "1.2rem", alignItems: "center", color: "white", fontSize: "15px" }}>
+          <div style={{ display: "flex", gap: "1.2rem", alignItems: "center", color: TEXT_COLOR, fontSize: "15px" }}>
             <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", cursor: "pointer" }}>
               <img src={imgOpenBook} alt="Series" style={{ height: "20px" }} />
               <span>Series</span>
             </div>
-            <span style={{ cursor: "pointer" }}>Categories</span>
-            <span style={{ cursor: "pointer" }} onClick={onUploadClick}>Favorites</span>
-            <span style={{ cursor: "pointer" }}>History</span>
+            <span style={{ cursor: "pointer" }} onClick={onCategoriesClick}>Categories</span>
+            <span style={{ cursor: "pointer" }} onClick={onFavoritesClick}>Favorites</span>
+            <span style={{ cursor: "pointer" }} onClick={onHistoryClick}>History</span>
+            {user && <span style={{ cursor: "pointer" }} onClick={onUploadClick}>Upload</span>}
           </div>
         </div>
 
-        {/* Right: Search & Actions */}
         <div style={{ display: "flex", alignItems: "center", gap: "1.2rem" }}>
           <div onClick={onSearchClick} style={{ 
             display: "flex", 
@@ -81,8 +77,13 @@ export default function PhamDucHuyTrangChu({ user, onUserClick, onSearchClick, o
             <span style={{ color: "black", opacity: 0.6, fontSize: "14px" }}>Tìm truyện ......</span>
           </div>
 
-          <img src={imgNutSangTi} alt="Theme Toggle" style={{ height: "24px", cursor: "pointer" }} />
-          <img src={imgThongBao} alt="Notifications" style={{ height: "24px", cursor: "pointer" }} />
+          <img src={imgNutSangTi} alt="Theme Toggle" style={{ height: "24px", cursor: "pointer" }} onClick={onThemeToggle} />
+          <img 
+            src={imgThongBao} 
+            alt="Notifications" 
+            style={{ height: "24px", cursor: "pointer" }} 
+            onClick={onNotificationClick}
+          />
           
           <div onClick={handleUserIconClick} style={{ display: "flex", alignItems: "center", gap: "0.6rem", cursor: "pointer" }}>
             <img src={imgNgiDung} alt="User" style={{ height: "32px" }} />
@@ -119,8 +120,7 @@ export default function PhamDucHuyTrangChu({ user, onUserClick, onSearchClick, o
           gap: "2rem"
         }}>
           {stories.map(story => (
-            <div key={story.id} 
-              onClick={() => onStoryClick(story)}
+            <div key={story.id}
               style={{
                 borderRadius: "12px",
                 overflow: "hidden",
@@ -133,7 +133,12 @@ export default function PhamDucHuyTrangChu({ user, onUserClick, onSearchClick, o
               onMouseLeave={e => e.currentTarget.style.transform = "translateY(0)"}
             >
               <div style={{ position: "relative", aspectRatio: "167/239", overflow: "hidden" }}>
-                <img src={story.img} alt={story.title} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                <img
+                  src={story.img}
+                  alt={story.title}
+                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                  onClick={() => onStoryClick(story)}
+                />
                 {story.hd && (
                   <div style={{
                     position: "absolute",
@@ -158,8 +163,8 @@ export default function PhamDucHuyTrangChu({ user, onUserClick, onSearchClick, o
                   background: "linear-gradient(to top, rgba(0,0,0,0.8), transparent)"
                 }} />
               </div>
-              <div style={{ padding: "0.75rem 0.5rem", backgroundColor: "#131928" }}>
-                <p style={{ margin: 0, fontWeight: "500", fontSize: "16px", textAlign: "center", color: "white" }}>
+              <div style={{ padding: "0.75rem 0.5rem", backgroundColor: CARD_TEXT_BG }}>
+                <p style={{ margin: 0, fontWeight: "500", fontSize: "16px", textAlign: "center", color: TEXT_COLOR }}>
                   {story.title}
                 </p>
               </div>
@@ -171,7 +176,7 @@ export default function PhamDucHuyTrangChu({ user, onUserClick, onSearchClick, o
       {/* Footer */}
       <footer style={{
         marginTop: "auto",
-        backgroundColor: "#131928",
+        backgroundColor: FOOTER_BG,
         borderTop: "6px solid #b3a1ff",
         padding: "4rem 8%",
         display: "flex",
@@ -182,18 +187,18 @@ export default function PhamDucHuyTrangChu({ user, onUserClick, onSearchClick, o
           <div style={{ display: "flex", gap: "5rem", flexWrap: "wrap" }}>
             <div style={{ display: "flex", flexDirection: "column", gap: "1.2rem" }}>
               <img src={imgImage1} alt="Footer Logo" style={{ height: "55px", width: "auto" }} />
-              <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem", fontSize: "16px", color: "white", opacity: 0.9 }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem", fontSize: "16px", color: TEXT_COLOR, opacity: 0.9 }}>
                 <span style={{ cursor: "pointer" }}>Chính sách bảo mật</span>
                 <span style={{ cursor: "pointer" }}>Điều khoản sử dụng</span>
               </div>
             </div>
 
-            <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem", fontSize: "16px", color: "white", opacity: 0.9, paddingTop: "0.4rem" }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem", fontSize: "16px", color: TEXT_COLOR, opacity: 0.9, paddingTop: "0.4rem" }}>
               <span style={{ cursor: "pointer" }}>Giới thiệu</span>
               <span style={{ cursor: "pointer" }}>Hỏi đáp</span>
             </div>
 
-            <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem", fontSize: "16px", color: "white", opacity: 0.9, paddingTop: "0.4rem" }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem", fontSize: "16px", color: TEXT_COLOR, opacity: 0.9, paddingTop: "0.4rem" }}>
               <span style={{ cursor: "pointer" }}>Liên hệ</span>
             </div>
           </div>
