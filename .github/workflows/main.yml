@@ -5,11 +5,10 @@ on:
     branches: [ "main" ] # Đổi về "main" nếu bạn muốn chạy khi merge vào main
 jobs:
   build-and-push:
-    runs-on: ubuntu-latest
-    steps:
+  runs-on: ubuntu-latest
+  steps:
     - name: Checkout code
       uses: actions/checkout@v4
-
     - name: Login Docker Hub
       uses: docker/login-action@v3
       with:
