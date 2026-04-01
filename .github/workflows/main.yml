@@ -3,7 +3,6 @@ name: CI/CD Docker
 on:
   push:
     branches: [ "develop" ] # Đổi về "main" nếu bạn muốn chạy khi merge vào main
-
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
