@@ -1,0 +1,55 @@
+services:
+  db:
+    image: mysql:8.0
+    container_name: websitedoctruyen_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: fimory
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+    ports:
+      - "3307:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    image: vanhuy04/websitedoctruyen-server
+    container_name: websitedoctruyen_server
+    restart: always
+    depends_on:
+      - db
+    ports:
+      - "8081:8081"
+    environment:
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_NAME=fimory
+      - DB_USER=root
+      - DB_PASSWORD=123456
+    networks:
+      - app-network
+
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    image: vanhuy04/websitedoctruyen-client
+    container_name: websitedoctruyen_client
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - server
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  db_data:
