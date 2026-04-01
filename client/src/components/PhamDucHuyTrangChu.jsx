@@ -1,3 +1,5 @@
+import React, { useEffect, useState } from "react";
+
 const imgImage2 = "https://www.figma.com/api/mcp/asset/be4a6751-ce0e-487b-8a43-b93a863b6b27";
 const imgImage3 = "https://www.figma.com/api/mcp/asset/d355aaac-0094-4386-aebd-130c6aa161db";
 const imgImage5 = "https://www.figma.com/api/mcp/asset/dfeda891-28e0-49ce-82c8-d9826159fc86";
@@ -15,147 +17,200 @@ const imgThongBao = "https://www.figma.com/api/mcp/asset/9dbaced7-0b92-475e-8a8d
 const imgNgiDung = "https://www.figma.com/api/mcp/asset/a33a2536-3008-4ac1-87af-011fd3bb59d1";
 const imgImage4 = "https://www.figma.com/api/mcp/asset/166ab19c-ff41-465e-a693-ba9fe242d88b";
 
-export default function PhamDucHuyTrangChu({ onUserClick }) {
+export default function PhamDucHuyTrangChu({ user, stories = [], favorites = [], onUserClick, onSearchClick, onCategoriesClick, onLoginClick, onLogout, onUploadClick, onFavoritesClick, onStoryClick, onNotificationClick, onHistoryClick, theme, onThemeToggle }) {
+  const isDark = theme === "dark";
+  const APP_BG = isDark ? "#0f172a" : "#dbeafe";
+  const NAV_BG = isDark ? "#131928" : "#e0e7ff";
+  const TEXT_COLOR = isDark ? "white" : "#1e293b";
+  const CARD_TEXT_BG = isDark ? "#131928" : "white";
+  const FOOTER_BG = isDark ? "#131928" : "#e0e7ff";
+
+  const handleUserIconClick = () => {
+    if (user) {
+      onUserClick();
+    } else {
+      alert("Vui lòng đăng nhập để xem thông tin cá nhân!");
+      onLoginClick();
+    }
+  };
+
   return (
-    <div style={{ backgroundColor: "#131928", position: "relative", width: "2805px", minHeight: "2644px", overflowX: "hidden" }}>
-      <p style={{ position: "absolute", fontFamily: "Inter, sans-serif", fontSize: "30px", left: "203px", top: "61px", color: "black", whiteSpace: "nowrap" }}>{` `}</p>
-      
-      <p style={{ position: "absolute", fontFamily: "Roboto, sans-serif", fontWeight: "bold", fontSize: "32px", color: "white", left: "159px", top: "630px", whiteSpace: "nowrap" }}>
-        Chàng trai năm ấy
-      </p>
-      <p style={{ position: "absolute", fontFamily: "Roboto, sans-serif", fontWeight: "bold", fontSize: "30px", color: "white", left: "1022px", top: "633px", whiteSpace: "nowrap" }}>
-        Thôn phệ tinh khôn
-      </p>
-      <p style={{ position: "absolute", fontFamily: "Roboto, sans-serif", fontWeight: "bold", fontSize: "30px", color: "white", left: "1469px", top: "633px", whiteSpace: "nowrap" }}>
-        Vũ độn càn khôn
-      </p>
-      <p style={{ position: "absolute", fontFamily: "Roboto, sans-serif", fontWeight: "bold", fontSize: "30px", color: "white", left: "1850px", top: "630px", whiteSpace: "nowrap" }}>
-        Song sinh võ hồn
-      </p>
-      <p style={{ position: "absolute", fontFamily: "Roboto, sans-serif", fontWeight: "bold", fontSize: "30px", color: "white", left: "152px", top: "1241px", whiteSpace: "nowrap" }}>
-        Huyền giới chi môn
-      </p>
+    <div style={{ backgroundColor: APP_BG, minHeight: "100vh", color: TEXT_COLOR, fontFamily: "Inter, sans-serif" }}>
+      <nav style={{
+        display: "flex",
+        alignItems: "center",
+        padding: "1rem 2rem",
+        backgroundColor: NAV_BG,
+        position: "sticky",
+        top: 0,
+        zIndex: 50,
+        boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
+        justifyContent: "space-between"
+      }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "2rem" }}>
+          <img src={imgImage1} alt="Logo" style={{ height: "45px", cursor: "pointer" }} />
 
-      <div style={{ position: "absolute", height: "416px", width: "320px", left: "131px", top: "184px" }}>
-        <img alt="" src={imgImage2} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }} />
-      </div>
-
-      <p style={{ position: "absolute", fontFamily: "Roboto, sans-serif", fontWeight: "bold", fontSize: "30px", color: "white", left: "612px", top: "633px", whiteSpace: "nowrap" }}>
-        Võ thượng thần đế
-      </p>
-
-      <div style={{ position: "absolute", height: "416px", width: "291px", left: "589px", top: "184px" }}>
-        <div style={{ position: "absolute", inset: 0, overflow: "hidden" }}>
-          <img alt="" src={imgImage3} style={{ position: "absolute", width: "100%", height: "107.26%", left: 0, top: "-0.02%" }} />
+          <div style={{ display: "flex", gap: "1.2rem", alignItems: "center", color: TEXT_COLOR, fontSize: "15px" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", cursor: "pointer" }}>
+              <img src={imgOpenBook} alt="Series" style={{ height: "20px" }} />
+              <span>Series</span>
+            </div>
+            <span style={{ cursor: "pointer" }} onClick={onCategoriesClick}>Categories</span>
+            <span style={{ cursor: "pointer" }} onClick={onFavoritesClick}>Favorites</span>
+            <span style={{ cursor: "pointer" }} onClick={onHistoryClick}>History</span>
+            {user && <span style={{ cursor: "pointer" }} onClick={onUploadClick}>Upload</span>}
+          </div>
         </div>
-      </div>
 
-      <div style={{ position: "absolute", backgroundColor: "rgba(217,217,217,0.08)", height: "518px", width: "296px", left: "589px", top: "184px" }} />
-      <div style={{ position: "absolute", backgroundColor: "rgba(217,217,217,0.08)", height: "518px", width: "296px", left: "1004px", top: "184px" }} />
-      <div style={{ position: "absolute", backgroundColor: "rgba(217,217,217,0.08)", height: "518px", width: "296px", left: "1435px", top: "179px" }} />
-      <div style={{ position: "absolute", backgroundColor: "rgba(217,217,217,0.08)", height: "518px", width: "296px", left: "129px", top: "774px" }} />
-      <div style={{ position: "absolute", backgroundColor: "rgba(217,217,217,0.08)", height: "518px", width: "296px", left: "1818px", top: "184px" }} />
+        <div style={{ display: "flex", alignItems: "center", gap: "1.2rem" }}>
+          <div onClick={onSearchClick} style={{ 
+            display: "flex", 
+            alignItems: "center", 
+            gap: "0.5rem", 
+            backgroundColor: "#a594f9", 
+            padding: "0.4rem 1rem", 
+            borderRadius: "6px", 
+            cursor: "pointer",
+            width: "320px"
+          }}>
+            <img src={imgSearch} alt="Search" style={{ height: "18px" }} />
+            <span style={{ color: "black", opacity: 0.6, fontSize: "14px" }}>Tìm truyện ......</span>
+          </div>
 
-      <div style={{ position: "absolute", height: "416px", width: "296px", left: "1435px", top: "184px" }}>
-        <div style={{ position: "absolute", inset: 0, overflow: "hidden" }}>
-          <img alt="" src={imgImage5} style={{ position: "absolute", width: "100%", height: "111.81%", left: 0, top: "-0.02%" }} />
+          <img src={imgNutSangTi} alt="Theme Toggle" style={{ height: "24px", cursor: "pointer" }} onClick={onThemeToggle} />
+          <img 
+            src={imgThongBao} 
+            alt="Notifications" 
+            style={{ height: "24px", cursor: "pointer" }} 
+            onClick={onNotificationClick}
+          />
+          
+          <div onClick={handleUserIconClick} style={{ display: "flex", alignItems: "center", gap: "0.6rem", cursor: "pointer" }}>
+            <img src={imgNgiDung} alt="User" style={{ height: "32px" }} />
+            {user && (
+              <span style={{ fontSize: "13px", fontWeight: 400, color: "white" }}>
+                {user.email || user.username}
+              </span>
+            )}
+          </div>
+
+          {user ? (
+            <button 
+              onClick={onLogout} 
+              style={{ backgroundColor: "#ef4444", border: "none", color: "white", padding: "0.35rem 0.8rem", borderRadius: "5px", fontWeight: "bold", cursor: "pointer", fontSize: "13px" }}
+            >
+              Đăng xuất
+            </button>
+          ) : (
+            <button 
+              onClick={onLoginClick} 
+              style={{ backgroundColor: "#2563eb", border: "none", color: "white", padding: "0.35rem 0.8rem", borderRadius: "5px", fontWeight: "bold", cursor: "pointer", fontSize: "13px" }}
+            >
+              Đăng nhập
+            </button>
+          )}
         </div>
-      </div>
+      </nav>
 
-      <div style={{ position: "absolute", height: "416px", width: "288px", left: "1822px", top: "184px" }}>
-        <img alt="" src={imgImage6} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }} />
-      </div>
-
-      <div style={{ position: "absolute", height: "441px", width: "291px", left: "134px", top: "770px" }}>
-        <img alt="" src={imgImage7} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }} />
-      </div>
-
-      <div style={{ position: "absolute", backgroundColor: "rgba(217,217,217,0.08)", height: "523px", width: "317px", left: "134px", top: "179px" }} />
+      {/* Main Content - Story Grid */}
+      <main style={{ padding: "2rem 8%" }}>
+        <div style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
+          gap: "2rem"
+        }}>
+          {stories.map(story => (
+            <div key={story.id}
+              style={{
+                borderRadius: "12px",
+                overflow: "hidden",
+                transition: "transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                cursor: "pointer",
+                position: "relative",
+                backgroundColor: "rgba(217, 217, 217, 0.05)"
+              }}
+              onMouseEnter={e => e.currentTarget.style.transform = "translateY(-10px)"}
+              onMouseLeave={e => e.currentTarget.style.transform = "translateY(0)"}
+            >
+              <div style={{ position: "relative", aspectRatio: "167/239", overflow: "hidden" }}>
+                <img
+                  src={story.img}
+                  alt={story.title}
+                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                  onClick={() => onStoryClick(story)}
+                />
+                {story.hd && (
+                  <div style={{
+                    position: "absolute",
+                    top: "8px",
+                    right: "8px",
+                    backgroundColor: "rgba(0, 0, 0, 0.75)",
+                    color: "white",
+                    padding: "2px 6px",
+                    borderRadius: "4px",
+                    fontSize: "11px",
+                    fontWeight: "bold",
+                    border: "1px solid rgba(255,255,255,0.2)"
+                  }}>HD</div>
+                )}
+                {/* Visual Overlay like the image */}
+                <div style={{
+                  position: "absolute",
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  height: "40%",
+                  background: "linear-gradient(to top, rgba(0,0,0,0.8), transparent)"
+                }} />
+              </div>
+              <div style={{ padding: "0.75rem 0.5rem", backgroundColor: CARD_TEXT_BG }}>
+                <p style={{ margin: 0, fontWeight: "500", fontSize: "16px", textAlign: "center", color: TEXT_COLOR }}>
+                  {story.title}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </main>
 
       {/* Footer */}
-      <div style={{ position: "absolute", backgroundColor: "#131928", border: "6px solid #b3a1ff", height: "569px", width: "2805px", left: 0, top: "2075px", overflow: "hidden" }}>
-        <div style={{ position: "absolute", height: "177px", width: "569px", left: "114px", top: "50px" }}>
-          <img alt="" src={imgImage1} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }} />
-        </div>
-        <p style={{ position: "absolute", fontFamily: "Roboto, sans-serif", fontSize: "45px", color: "white", left: "144px", top: "291px", whiteSpace: "nowrap" }}>
-          Chính sách bảo mật
-        </p>
-        <p style={{ position: "absolute", fontFamily: "Roboto, sans-serif", fontSize: "45px", color: "white", left: "657px", top: "378px", whiteSpace: "nowrap" }}>
-          Hỏi đáp
-        </p>
-        <p style={{ position: "absolute", fontFamily: "Roboto, sans-serif", fontSize: "45px", color: "white", left: "144px", top: "378px", whiteSpace: "nowrap" }}>
-          Điều khoản sử dụng
-        </p>
-        <p style={{ position: "absolute", fontFamily: "Roboto, sans-serif", fontSize: "45px", color: "white", left: "657px", top: "291px", whiteSpace: "nowrap" }}>
-          Giới thiệu
-        </p>
-        <p style={{ position: "absolute", fontFamily: "Roboto, sans-serif", fontSize: "45px", color: "white", left: "977px", top: "291px", whiteSpace: "nowrap" }}>
-          Liên hệ
-        </p>
-        <div style={{ position: "absolute", height: "113px", width: "138px", left: "846px", top: "82px" }}>
-          <img alt="" src={imgFacebook} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "contain" }} />
-        </div>
-        <div style={{ position: "absolute", height: "113px", width: "138px", left: "1039px", top: "82px" }}>
-          <img alt="" src={imgTelegram} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "contain" }} />
-        </div>
-        <div style={{ position: "absolute", height: "113px", width: "138px", left: "1425px", top: "82px" }}>
-          <img alt="" src={imgTikTok} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "contain" }} />
-        </div>
-        <div style={{ position: "absolute", height: "113px", width: "138px", left: "1232px", top: "82px" }}>
-          <img alt="" src={imgDiscordNew} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "contain" }} />
-        </div>
-      </div>
+      <footer style={{
+        marginTop: "auto",
+        backgroundColor: FOOTER_BG,
+        borderTop: "6px solid #b3a1ff",
+        padding: "4rem 8%",
+        display: "flex",
+        flexDirection: "column",
+        gap: "3rem"
+      }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: "3rem" }}>
+          <div style={{ display: "flex", gap: "5rem", flexWrap: "wrap" }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: "1.2rem" }}>
+              <img src={imgImage1} alt="Footer Logo" style={{ height: "55px", width: "auto" }} />
+              <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem", fontSize: "16px", color: TEXT_COLOR, opacity: 0.9 }}>
+                <span style={{ cursor: "pointer" }}>Chính sách bảo mật</span>
+                <span style={{ cursor: "pointer" }}>Điều khoản sử dụng</span>
+              </div>
+            </div>
 
-      {/* Navbar */}
-      <div style={{ position: "absolute", backgroundColor: "#131928", height: "124px", width: "2805px", left: 0, top: 0, overflow: "hidden" }}>
-        <p style={{ position: "absolute", fontFamily: "Inter, sans-serif", fontSize: "30px", left: "203px", top: "61px", color: "black", whiteSpace: "nowrap" }}>{` `}</p>
-        <div style={{ position: "absolute", height: "77px", width: "247px", left: "27px", top: "22px" }}>
-          <img alt="" src={imgImage1} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }} />
-        </div>
-        <div style={{ position: "absolute", backgroundColor: "#131928", height: "66px", width: "221px", left: "377px", top: "28px", overflow: "hidden" }}>
-          <p style={{ position: "absolute", fontFamily: "Inter, sans-serif", fontSize: "30px", color: "white", left: "90px", top: "15px", whiteSpace: "nowrap" }}>
-            Series
-          </p>
-        </div>
-        <div style={{ position: "absolute", height: "76px", width: "76px", left: "377px", top: "23px" }}>
-          <img alt="" src={imgOpenBook} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "contain" }} />
-        </div>
-        <p style={{ position: "absolute", fontFamily: "Inter, sans-serif", fontSize: "30px", color: "white", left: "579px", top: "45px", whiteSpace: "nowrap" }}>
-          Categories
-        </p>
-        <div style={{ position: "absolute", backgroundColor: "#b3a1ff", height: "71px", width: "1015px", left: "1059px", top: "20px", borderRadius: "12px", overflow: "hidden" }}>
-          <div style={{ position: "absolute", height: "64px", width: "64px", left: "17px", top: "4px" }}>
-            <img alt="" src={imgSearch} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "contain" }} />
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem", fontSize: "16px", color: TEXT_COLOR, opacity: 0.9, paddingTop: "0.4rem" }}>
+              <span style={{ cursor: "pointer" }}>Giới thiệu</span>
+              <span style={{ cursor: "pointer" }}>Hỏi đáp</span>
+            </div>
+
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem", fontSize: "16px", color: TEXT_COLOR, opacity: 0.9, paddingTop: "0.4rem" }}>
+              <span style={{ cursor: "pointer" }}>Liên hệ</span>
+            </div>
           </div>
-          <p style={{ position: "absolute", fontFamily: "Inter, sans-serif", fontSize: "30px", color: "black", left: "110px", top: "18px", whiteSpace: "nowrap" }}>
-            Tìm truyện ......
-          </p>
-        </div>
-        <div style={{ position: "absolute", height: "79px", width: "79px", left: "2109px", top: "21px" }}>
-          <img alt="" src={imgNutSangTi} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "contain" }} />
-        </div>
-        <div style={{ position: "absolute", height: "83px", width: "86px", left: "2223px", top: "22px" }}>
-          <img alt="" src={imgThongBao} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "contain" }} />
-        </div>
-        <div style={{ position: "absolute", height: "86px", width: "93px", left: "2344px", top: "19px", cursor: "pointer" }} onClick={onUserClick}>
-          <img alt="" src={imgNgiDung} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "contain" }} />
-        </div>
-        <p style={{ position: "absolute", fontFamily: "Inter, sans-serif", fontSize: "30px", color: "white", left: "765px", top: "45px", whiteSpace: "nowrap" }}>
-          Favorites
-        </p>
-        <p style={{ position: "absolute", fontFamily: "Inter, sans-serif", fontSize: "30px", color: "white", left: "927px", top: "45px", whiteSpace: "nowrap" }}>
-          History
-        </p>
-        <p style={{ position: "absolute", fontFamily: "Roboto, sans-serif", fontSize: "35px", color: "white", left: "2437px", top: "46px", whiteSpace: "nowrap" }}>
-          User123@gmail.com
-        </p>
-      </div>
 
-      <div style={{ position: "absolute", height: "417px", width: "296px", left: "1004px", top: "179px" }}>
-        <div style={{ position: "absolute", inset: 0, overflow: "hidden" }}>
-          <img alt="" src={imgImage4} style={{ position: "absolute", width: "100.18%", height: "106.95%", left: "-0.09%", top: 0 }} />
+          <div style={{ display: "flex", gap: "1.5rem", paddingTop: "0.5rem" }}>
+            <img src={imgFacebook} alt="Facebook" style={{ height: "36px", cursor: "pointer" }} />
+            <img src={imgTelegram} alt="Telegram" style={{ height: "36px", cursor: "pointer" }} />
+            <img src={imgDiscordNew} alt="Discord" style={{ height: "36px", cursor: "pointer" }} />
+            <img src={imgTikTok} alt="TikTok" style={{ height: "36px", cursor: "pointer" }} />
+          </div>
         </div>
-      </div>
+      </footer>
     </div>
   );
 }

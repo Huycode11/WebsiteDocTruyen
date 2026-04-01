@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "figma": {
+      "command": "node",
+      "args": ["server.js"],
+      "env": {
+        "FIGMA_TOKEN": "figd_KUkA3V1GPju_SizL9nZSG_Wk5rz6jgr2_MCiBFc1"
+      }
+    }
+  }
+}

@@ -1,6 +1,6 @@
 # Environment variables
 .env
-
+mcp.json
 # Spring Boot configuration (containing secrets)
 server/src/main/resources/application.properties
 
@@ -30,3 +30,5 @@ out/
 .gemini/
 .agents/
 /tmp/
+
+mcp.json
