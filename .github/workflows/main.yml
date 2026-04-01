@@ -14,7 +14,7 @@ jobs:
       uses: docker/login-action@v3
       with:
         username: vanhuy04
-        password: dckr_pat_ViPUfMa4MUGEy0sfZ2PZUZFyHq4
+        password: dckr_pat_aFkT9cknsQW0nljiOPm5bNdFNu8
 
     - name: Build & Push Backend
       uses: docker/build-push-action@v5
